@@ -50,7 +50,7 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
               </button>
             </>
           ) : (
-            <>
+            <div>
               <p className="text-sm text-gray-700">Ask a question?</p>
               <div className="flex items-center mt-2">
                 <input
@@ -69,7 +69,7 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
                 </button>
               </div>
               {loading && <div className="mt-2 text-center text-gray-500 animate-pulse">Loading...</div>}
-            </>
+            </div>
           )}
         </motion.div>
       )}

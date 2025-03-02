@@ -3,12 +3,15 @@ import Sidebar from "./sidebar";
 import PdfViewer from "./pdfviewer";
 import Notes from "./notes";
 import { Layout as LayoutSub } from "../subcomponents";
+import AskEntirePdf from "./AskEntirePdf";
 
 const Layout = () => {
   const [sidebarWidth, setSidebarWidth] = useState(20);
   const [notesWidth, setNotesWidth] = useState(20);
+  const [notesHeight, setNotesHeight] = useState(60);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [notes, setNotes] = useState([]);
+  const [fullPdfText, setFullPdfText] = useState("");
 
   useEffect(() => {
     if (selectedPdf) {
@@ -43,6 +46,17 @@ const Layout = () => {
       (document.onmousemove = document.onmouseup = null);
   };
 
+  const handleDragVertical = (event) => {
+    event.preventDefault();
+    document.onmousemove = (e) => {
+      setNotesHeight(
+        Math.max(30, Math.min(80, (e.clientY / window.innerHeight) * 100))
+      );
+    };
+    document.onmouseup = () =>
+      (document.onmousemove = document.onmouseup = null);
+  };
+
   const addNote = (note) => {
     if (!selectedPdf) return;
 
@@ -69,14 +83,22 @@ const Layout = () => {
       <LayoutSub.PViewer
         style={{ width: `${100 - sidebarWidth - notesWidth}%` }}
       >
-        <PdfViewer pdf={selectedPdf} addNote={addNote} />
+        <PdfViewer pdf={selectedPdf} addNote={addNote} setFullPdfText={setFullPdfText}/>
       </LayoutSub.PViewer>
 
       <LayoutSub.Nbar style={{ width: `${notesWidth}%` }}>
         <LayoutSub.LRsizer
           onMouseDown={(e) => handleDragRight(e, setNotesWidth)}
         />
-        <Notes notes={notes} />
+        <LayoutSub.TopSection style={{ height: `${notesHeight}%` }}>
+          <Notes notes={notes} setNotes={setNotes} docId={selectedPdf}/>
+        </LayoutSub.TopSection>
+
+        <LayoutSub.VResizer onMouseDown={(e) => handleDragVertical(e)} />
+
+        <LayoutSub.BottomSection style={{ height: `${100 - notesHeight}%` }}>
+          <AskEntirePdf pdfText={fullPdfText}/>
+        </LayoutSub.BottomSection>
       </LayoutSub.Nbar>
     </LayoutSub>
   );

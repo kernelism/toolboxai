@@ -13,12 +13,25 @@ function CardContent({ children }) {
   return <div className="mt-2">{children}</div>;
 }
 
-export default function Notes({ notes }) {
+export default function Notes({ notes, setNotes, docId }) {
   const [selectedNote, setSelectedNote] = useState(null);
 
   useEffect(() => {
     console.log("Notes updated:", notes);
   }, [notes]);
+
+  const deleteNote = (index) => {
+    if (!notes || notes.length === 0) return;
+    
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
+
+    // Update localStorage if a PDF is selected
+    const selectedPdfId = docId;
+    if (selectedPdfId) {
+      localStorage.setItem(`notes_${selectedPdfId}`, JSON.stringify(updatedNotes));
+    }
+  };
 
   return (
     <div className="w-full p-4 bg-gray-100 h-screen overflow-auto relative">
@@ -35,6 +48,16 @@ export default function Notes({ notes }) {
                 A: {note.answer}
               </div>
             </CardContent>
+            {/* Delete button */}
+            <button 
+              className="mt-2 text-sm text-red-600 hover:text-red-800"
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteNote(index);
+              }}
+            >
+              Delete
+            </button>
           </Card>
         ))}
       </div>

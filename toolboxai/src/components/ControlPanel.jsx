@@ -20,7 +20,7 @@ const ControlPanel = ({ file, pageNumber, numPages, setPageNumber, scale, setSca
     
     return (
       <PdfComponent.ControlPanelContainer>
-        <PdfComponent.ControlGroup>
+        {/* <PdfComponent.ControlGroup>
           <PdfComponent.Icon className={`fas fa-fast-backward ${isFirstPage ? 'disabled' : 'clickable'}`} onClick={goToFirstPage} />
           <PdfComponent.Icon className={`fas fa-backward ${isFirstPage ? 'disabled' : 'clickable'}`} onClick={goToPreviousPage} />
           <span>
@@ -28,7 +28,7 @@ const ControlPanel = ({ file, pageNumber, numPages, setPageNumber, scale, setSca
           </span>
           <PdfComponent.Icon className={`fas fa-forward ${isLastPage ? 'disabled' : 'clickable'}`} onClick={goToNextPage} />
           <PdfComponent.Icon className={`fas fa-fast-forward ${isLastPage ? 'disabled' : 'clickable'}`} onClick={goToLastPage} />
-        </PdfComponent.ControlGroup>
+        </PdfComponent.ControlGroup> */}
         <PdfComponent.ControlGroup>
           <PdfComponent.Icon className={`fas fa-search-minus ${isMinZoom ? 'disabled' : 'clickable'}`} onClick={zoomOut} />
           <span>{(scale * 100).toFixed()}%</span>

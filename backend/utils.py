@@ -24,6 +24,17 @@ def get_pdf_page_count(file_path):
     except Exception as e:
         logger.error(f"Error getting page count for {file_path}: {e}")
         return None
+    
+def prompt_builder(request: models.AskRequest):
+    return f"""
+    You are a powerful research assistant who always answers questions using given context focusing on brevity and clarity.
+
+    Here is the context which is a research paper snippet:
+    {request.selectedText}
+
+    Here is the question you need to answer:
+    {request.prompt}
+    """
 
 def scan_documents_directory(DOCUMENTS_DIR):
     """Scan the documents directory and return information about PDF files"""

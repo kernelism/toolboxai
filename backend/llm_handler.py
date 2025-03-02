@@ -1,35 +1,29 @@
-import os
 import logging
 import requests
 from fastapi import HTTPException
 from models import AskRequest
 from dotenv import load_dotenv
-import json
-import subprocess
+from config import settings
+
+import utils
 
 logger = logging.getLogger(__name__)
 load_dotenv()
-
-# Load configurations
-MODEL_BACKEND = os.getenv("MODEL_BACKEND", "together_ai")
-TOGETHER_AI_API_KEY = os.getenv("TOGETHER_AI_API_KEY")
-TOGETHER_AI_MODEL = os.getenv("TOGETHER_AI_MODEL", "mistralai/Mixtral-8x7B-Instruct")
-LOCAL_MODEL_NAME = os.getenv("LOCAL_MODEL_NAME", "mixtral")
 
 def send_llm_request(request: AskRequest):
     """
     Sends a request to the LLM, using either Together AI (cloud) or Ollama (local).
     """
-    if MODEL_BACKEND == "together_ai":
-        if not TOGETHER_AI_API_KEY:
+    if settings.MODEL_BACKEND == "together_ai":
+        if not settings.TOGETHER_AI_API_KEY:
             raise HTTPException(status_code=500, detail="Together AI API key is missing")
 
         payload = {
-            "model": TOGETHER_AI_MODEL,
-            "prompt": f"Context: {request.selectedText}\nQuestion: {request.prompt}",
+            "model": settings.TOGETHER_AI_MODEL,
+            "prompt": utils.prompt_builder(request),
             "max_tokens": 300,
         }
-        headers = {"Authorization": f"Bearer {TOGETHER_AI_API_KEY}"}
+        headers = {"Authorization": f"Bearer {settings.TOGETHER_AI_API_KEY}"}
 
         try:
             response = requests.post(
@@ -45,7 +39,7 @@ def send_llm_request(request: AskRequest):
             logger.error(f"Error calling Together AI: {e}")
             raise HTTPException(status_code=500, detail="Failed to fetch response from Together AI")
 
-    elif MODEL_BACKEND == "local":
+    elif settings.MODEL_BACKEND == "local":
         return send_local_request(request)
 
     else:
@@ -53,20 +47,22 @@ def send_llm_request(request: AskRequest):
 
 def send_local_request(request: AskRequest):
     """
-    Calls a local LLM using Ollama.
+    Calls a local LLM using Ollama's REST API.
     """
+    if not settings.OLLAMA_API_URL or not settings.LOCAL_MODEL_NAME:
+        raise HTTPException(status_code=500, detail="Ollama API URL or local model name is missing")
     try:
-        # Use Ollama's CLI to make a request
-        cmd = [
-            "ollama", "run", LOCAL_MODEL_NAME,
-            json.dumps({"prompt": f"Context: {request.selectedText}\nQuestion: {request.prompt}"})
-        ]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
-        if result.returncode != 0:
-            raise Exception(result.stderr)
-        
-        return result.stdout.strip()
+        payload = {
+            "model": settings.LOCAL_MODEL_NAME,
+            "prompt": utils.prompt_builder(request),
+            "stream": False  # Set to True if you want streaming responses
+        }
+        response = requests.post(settings.OLLAMA_API_URL, json=payload, timeout=30)
+        response.raise_for_status()
 
-    except Exception as e:
+        return response.json().get("response", "").strip()
+
+    except requests.exceptions.RequestException as e:
         logger.error(f"Error calling local model: {e}")
         raise HTTPException(status_code=500, detail="Failed to fetch response from local model")
+    

@@ -42,5 +42,26 @@ export const Resizer = styled.div`
 export const LeftResizer = styled(Resizer)`
   left: 0;
   right: auto;
-  z-index: 70;
+  z-index: 40;
+`;
+
+export const TopSection = styled.div`
+  width: 100%;
+  overflow: auto;
+`;
+
+export const BottomSection = styled.div`
+  width: 100%;
+  overflow: auto;
+  background: #f5f5f5; /* Optional styling */
+`;
+
+export const VerticalResizer = styled.div`
+  height: 5px;
+  width: 100%;
+  cursor: ns-resize;
+  background: gray;
+  &:hover {
+    background: darkgray;
+  }
 `;

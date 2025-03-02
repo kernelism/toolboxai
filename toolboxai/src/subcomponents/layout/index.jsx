@@ -4,7 +4,10 @@ import {
     PdfViewer,
     Notes,
     Resizer,
-    LeftResizer
+    LeftResizer,
+    VerticalResizer,
+    TopSection,
+    BottomSection
 } from "./layout";
 
 export default function Layout({children, ...restProps}) {
@@ -29,4 +32,15 @@ Layout.Rsizer = function LayoutResizer({children, ...restProps}) {
 
 Layout.LRsizer = function LayoutLeftResizer({children, ...restProps}) {
     return <LeftResizer {...restProps}>{children}</LeftResizer>;
+}
+Layout.VResizer = function LayoutVerticalResizer({children, ...restProps}) {
+    return <VerticalResizer {...restProps}>{children}</VerticalResizer>;
+};
+
+Layout.TopSection = function LayoutTopSection({children, ...restProps}) {
+    return <TopSection {...restProps}>{children}</TopSection>;
+};
+
+Layout.BottomSection = function LayoutBottomSection({children, ...restProps}) {
+    return <BottomSection {...restProps}>{children}</BottomSection>;
 }

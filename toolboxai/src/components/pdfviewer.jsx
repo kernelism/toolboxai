@@ -11,7 +11,7 @@ import axios from "axios";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-const PdfViewer = ({ pdf, addNote }) => {
+const PdfViewer = ({ pdf, addNote, setFullPdfText }) => {
   const [scale, setScale] = useState(1.0);
   const [numPages, setNumPages] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -21,6 +21,27 @@ const PdfViewer = ({ pdf, addNote }) => {
   const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
   const [llmAnswer, setLlmAnswer] = useState("");
 
+  const extractTextFromPdf = async (pdfUrl) => {
+    try {
+      const loadingTask = pdfjs.getDocument(pdfUrl);
+      const pdf = await loadingTask.promise;
+      let extractedText = "";
+  
+      // Extract text from the first page
+      for (let i = 1; i < 2; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(" ");
+        extractedText += pageText + "\n"; 
+      }
+  
+      return extractedText;
+    } catch (error) {
+      console.error("Error extracting text from PDF:", error);
+      return "";
+    }
+  };
+  
   useEffect(() => {
     if (!pdf) return;
 
@@ -37,6 +58,9 @@ const PdfViewer = ({ pdf, addNote }) => {
         const pdfBlob = await response.blob();
         const pdfUrl = URL.createObjectURL(pdfBlob);
         console.log("PDF Data Loaded:", pdfUrl);
+        const fullText = await extractTextFromPdf(pdfUrl);
+        console.log("Full PDF Text:", fullText);
+        setFullPdfText(fullText);
         setPdfData(pdfUrl);
       } catch (error) {
         console.error("Error fetching PDF:", error);
@@ -71,13 +95,21 @@ const PdfViewer = ({ pdf, addNote }) => {
 
     console.log("API Response:", response.data);
     setLlmAnswer(response.data.answer);
+  };
+
+  const handleOutsideClick = () => {
+    setSelectedText("");
+    setLlmAnswer("");
   }
 
   return (
     pdf && (
       <PdfComponent>
         <Loader isLoading={isLoading} />
-        <PdfComponent.PdfSection onMouseUp={handleMouseUp}>
+        <PdfComponent.PdfSection
+          onMouseUp={handleMouseUp}
+          style={{ overflowY: "auto", maxHeight: "100vh" }}
+        >
           <ControlPanel
             scale={scale}
             setScale={setScale}
@@ -87,17 +119,23 @@ const PdfViewer = ({ pdf, addNote }) => {
             file={{ url: pdf }}
           />
           <Document file={pdfData} onLoadSuccess={onDocumentLoadSuccess}>
-            <Page
-              pageNumber={pageNumber}
-              scale={scale}
-              renderTextLayer={true}
-              renderAnnotationLayer={true}
-            />
+            {/* Render all pages as a scrollable container */}
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              {[...Array(numPages)].map((_, index) => (
+                <Page
+                  key={index}
+                  pageNumber={index + 1}
+                  scale={scale}
+                  renderTextLayer={true}
+                  renderAnnotationLayer={true}
+                />
+              ))}
+            </div>
           </Document>
         </PdfComponent.PdfSection>
 
         {selectedText && (
-          <OutsideAlerter onOutsideClick={() => setSelectedText("")}>
+          <OutsideAlerter onOutsideClick={handleOutsideClick}>
             <TextSelectionPopup
               selectedText={selectedText}
               setAnswerText={setLlmAnswer}
