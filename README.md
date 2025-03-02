@@ -1,7 +1,7 @@
 <div align="center">
   <h1>Toolbox.ai</h1>
   <!-- You can add your logo here with: -->
-  <!-- <img src="path/to/your/logo.png" alt="Toolbox.ai Logo" width="200"/> -->
+  <img src="./assets/toolboxai.png" alt="Toolbox.ai Logo" width="200"/>
 </div>
 
 ### Overview
