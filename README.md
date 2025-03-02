@@ -4,7 +4,7 @@
 
 Toolbox is a reading assistant for research papers. You can select text from uploaded pdf files and ask specific questions, and save the answers as notes to view later. Still in beta.
 
-## How it looks
+### How it looks
 pretty simplistic design
 
 ![screenshot1](./assets/ss1.png)
@@ -15,13 +15,13 @@ pretty simplistic design
 
 ![screenshot1](./assets/ss4.png)
 
-## Setup
+### Setup
 
 ```
 git clone https://github.com/MinatoNamikaze02?tab=repositories
 ```
 
-### Frontend 
+#### Frontend 
 
 ```
 cd toolboxai
@@ -29,7 +29,7 @@ cd toolboxai
 npm install && npm start
 ```
 
-### Backend
+#### Backend
 
 ```
 cd backend
@@ -40,3 +40,4 @@ pip install -r requirements.txt
 python server.py
 ```
 
+Cheers!
