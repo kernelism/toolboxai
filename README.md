@@ -81,17 +81,21 @@ OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
 - Start the Ollama server: ollama serve
 - Set the environment variables to use your local model
 
-### Upcoming updates
+### Feature log
 - [ ] Docker support
+- [ ] Support follow up questions on notes and general qns.
+- [ ] Support Open AI models.
+- [ ] Support uploading pdfs.
+- [ ] Support scraping pdfs with doi?
+- [ ] UI Refresh?
+
+### Issue log
 - [x] Cannot select text from multiple pdf pages
 - [x] Cannot delete notes
 - [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
 - [x] Right side scroll z-index issues
-- [ ] Ask a question box explodes in size if answer is too long. temporary fix with max tokens
-- [ ] cannot upload pdf, currently just reads all pdfs from a default folder 
 - [x] cannot ask question on entire pdf
-- [x] cannot ask follow up questions
-- [ ] cannot use models outside togetherai if not locally hosted.
+- [ ] "Ask a question" box explodes in size of answer is too long. temporary fix with max tokens
 
 ### License
 MIT
