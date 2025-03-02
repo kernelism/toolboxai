@@ -71,6 +71,9 @@ API_URL=https://api.together.xyz/v1/completions # or other urls
 # For local models via Ollama
 LOCAL_MODEL_NAME=model_name  # e.g., "llama2" or "mistral"
 OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
+
+# documents path where your papers are stored
+DOCUMENTS_DIR='./documents'
 ```
 
 #### Together.ai Setup

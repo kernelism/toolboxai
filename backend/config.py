@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     API_URL: Optional[str] = None
     LOCAL_MODEL_NAME: Optional[str] = None
     OLLAMA_API_URL: Optional[str] = None
+    DOCUMENTS_DIR: str = "./documents"
 
     class Config:
         env_file = f'.env'
