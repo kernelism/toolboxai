@@ -43,7 +43,7 @@ pip install -r requirements.txt
 python server.py
 ```
 
-#### Major issues
+### Major issues
 - [x] Cannot select text from multiple pdf pages
 - [x] Cannot delete notes
 - [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
