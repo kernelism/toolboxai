@@ -175,3 +175,8 @@ cython_debug/
 
 lenv
 documents/
+
+arango/
+
+*.gexf
+*.json

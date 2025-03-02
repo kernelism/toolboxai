@@ -18,9 +18,9 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
 
   const handleSaveNote = () => {
     addNote({ question: prompt, context: selectedText, answer: answerText });
-    setAnswerText(""); // Clear the answer after saving
-    setPrompt(""); // Reset the prompt
-    setShowPopup(false); // Hide the popup after saving
+    setAnswerText("");
+    setPrompt(""); 
+    setShowPopup(false);
   };
 
   return (

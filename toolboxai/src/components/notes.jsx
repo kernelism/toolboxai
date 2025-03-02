@@ -23,7 +23,7 @@ export default function Notes({ notes }) {
   return (
     <div className="w-full p-4 bg-gray-100 h-screen overflow-auto relative">
       <h2 className="text-lg font-semibold mb-4">Notes</h2>
-      <div className="space-y-4 pb-16"> {/* Ensure space for button */}
+      <div className="space-y-4 pb-16">
         {notes.map((note, index) => (
           <Card key={index} onClick={() => setSelectedNote(note)}>
             <CardContent>

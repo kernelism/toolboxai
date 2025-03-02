@@ -96,7 +96,6 @@ const PdfViewer = ({ pdf, addNote }) => {
           </Document>
         </PdfComponent.PdfSection>
 
-        {/* Wrap Popup with OutsideAlerter to close it when clicking outside */}
         {selectedText && (
           <OutsideAlerter onOutsideClick={() => setSelectedText("")}>
             <TextSelectionPopup

@@ -2,9 +2,14 @@ import os
 import time
 import mimetypes
 import fitz
+import json
 
 from server import logger
 import models
+
+def load_dblp_data(file_path):
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return [json.loads(line) for line in f]
 
 def format_size(size_bytes):
     for unit in ['B', 'KB', 'MB', 'GB']:
