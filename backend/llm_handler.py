@@ -15,19 +15,19 @@ def send_llm_request(request: AskRequest):
     Sends a request to the LLM, using either Together AI (cloud) or Ollama (local).
     """
     if settings.MODEL_BACKEND == "together_ai":
-        if not settings.TOGETHER_AI_API_KEY:
+        if not settings.API_KEY:
             raise HTTPException(status_code=500, detail="Together AI API key is missing")
 
         payload = {
-            "model": settings.TOGETHER_AI_MODEL,
+            "model": settings.MODEL,
             "prompt": utils.prompt_builder(request),
             "max_tokens": 300,
         }
-        headers = {"Authorization": f"Bearer {settings.TOGETHER_AI_API_KEY}"}
+        headers = {"Authorization": f"Bearer {settings.API_KEY}"}
 
         try:
             response = requests.post(
-                "https://api.together.xyz/v1/completions",
+                settings.API_URL,
                 json=payload,
                 headers=headers,
                 timeout=30

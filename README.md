@@ -64,8 +64,9 @@ touch backend/.env
 MODEL_BACKEND=together_ai  # Options: "together_ai" or "local"
 
 # For Together.ai
-TOGETHER_AI_API_KEY=your_api_key_here
-TOGETHER_AI_MODEL=model_name  # e.g., "togethercomputer/llama-2-70b-chat"
+API_KEY=your_api_key_here
+MODEL=model_name  # e.g., "togethercomputer/llama-2-70b-chat"
+API_URL=https://api.together.xyz/v1/completions # or other urls
 
 # For local models via Ollama
 LOCAL_MODEL_NAME=model_name  # e.g., "llama2" or "mistral"
