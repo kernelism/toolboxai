@@ -25,7 +25,7 @@ Currently in beta.
 ### Setup
 
 ```
-git clone https://github.com/MinatoNamikaze02?tab=repositories
+git clone https://github.com/MinatoNamikaze02
 ```
 
 #### Frontend 
