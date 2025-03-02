@@ -6,7 +6,6 @@ Toolbox is a reading assistant for research papers. You can select text from upl
 Still in beta.
 
 ### How it looks
-
 *Ignore the response quality. Used a pretty small model to test the work*
 
 ![screenshot1](./assets/ss1.png)
@@ -45,8 +44,14 @@ python server.py
 ```
 
 #### Major issues
-- Ask a question box explodes in size if answer is too long. temporary fix with max tokens
-- cannot upload pdf, currently just reads all pdfs from a default folder 
-- cannot use models outside togetherai if not locally hosted.
+- [x] Cannot select text from multiple pdf pages
+- [x] Cannot delete notes
+- [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
+- [x] Right side scroll z-index issues
+- [ ] Ask a question box explodes in size if answer is too long. temporary fix with max tokens
+- [ ] cannot upload pdf, currently just reads all pdfs from a default folder 
+- [x] cannot ask question on entire pdf
+- [x] cannot ask follow up questions
+- [ ] cannot use models outside togetherai if not locally hosted.
 
 Cheers!
