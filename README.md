@@ -95,6 +95,7 @@ DOCUMENTS_DIR='./documents'
 - [ ] Support Open AI models.
 - [ ] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
+- [ ] Support querying on images?
 - [ ] UI Refresh?
 
 ### Issue log
