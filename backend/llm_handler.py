@@ -57,7 +57,7 @@ def send_local_request(request: AskRequest):
             "prompt": utils.prompt_builder(request),
             "stream": False  # Set to True if you want streaming responses
         }
-        response = requests.post(settings.OLLAMA_API_URL, json=payload, timeout=30)
+        response = requests.post(settings.OLLAMA_API_URL + "/api/generate", json=payload, timeout=30)
         response.raise_for_status()
 
         return response.json().get("response", "").strip()

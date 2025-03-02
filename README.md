@@ -1,9 +1,13 @@
-## toolbox.ai
+<div align="center">
+  <h1>Toolbox.ai</h1>
+  <!-- You can add your logo here with: -->
+  <!-- <img src="path/to/your/logo.png" alt="Toolbox.ai Logo" width="200"/> -->
+</div>
 
 ### Overview
 
-Toolbox is a reading assistant for research papers. You can select text from uploaded pdf files and ask specific questions, and save the answers as notes to view later. Supports llms through together.ai or locally hosted models.
-Still in beta.
+Toolbox.ai is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai integration or locally hosted ollama models.
+Currently in beta.
 
 ### How it looks
 *Ignore the response quality. Used a pretty small model to test the work*
@@ -43,7 +47,42 @@ pip install -r requirements.txt
 python server.py
 ```
 
-### Major issues
+### Model Configuration
+Toolbox.ai supports both Together.ai hosted models and local models through Ollama. Configure your preferred model by setting the following environment variables:
+
+```
+# Create a .env file in the backend directory
+touch backend/.env
+```
+
+```
+# Required: Choose your model backend
+MODEL_BACKEND=together_ai  # Options: "together_ai" or "local"
+
+# For Together.ai
+TOGETHER_AI_API_KEY=your_api_key_here
+TOGETHER_AI_MODEL=model_name  # e.g., "togethercomputer/llama-2-70b-chat"
+
+# For local models via Ollama
+LOCAL_MODEL_NAME=model_name  # e.g., "llama2" or "mistral"
+OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
+```
+
+#### Together.ai Setup
+
+- Create an account at Together.ai
+- Generate an API key from your dashboard
+- Set the environment variables as shown above with your API key and preferred model
+
+#### Ollama Setup
+
+- Install Ollama from ollama.ai
+- Pull your preferred model: ollama pull llama2 (or another model)
+- Start the Ollama server: ollama serve
+- Set the environment variables to use your local model
+
+### Upcoming updates
+- [ ] Docker support
 - [x] Cannot select text from multiple pdf pages
 - [x] Cannot delete notes
 - [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
@@ -54,4 +93,5 @@ python server.py
 - [x] cannot ask follow up questions
 - [ ] cannot use models outside togetherai if not locally hosted.
 
-Cheers!
+### License
+MIT
