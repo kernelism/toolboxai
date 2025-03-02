@@ -1,12 +1,12 @@
 <div align="center">
-  <h1>Toolbox.ai</h1>
+  <h1>toolboxAi</h1>
   <!-- You can add your logo here with: -->
   <img src="./assets/toolboxai.png" alt="Toolbox.ai Logo" width="200"/>
 </div>
 
 ### Overview
 
-Toolbox.ai is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai integration or locally hosted ollama models.
+toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai integration or locally hosted ollama models.
 Currently in beta.
 
 [NotebookLM](https://notebooklm.google/) is quite good, but a few reasons why I wouldn't use it.
@@ -52,7 +52,7 @@ python server.py
 ```
 
 ### Model Configuration
-Toolbox.ai supports both Together.ai hosted models and local models through Ollama. Configure your preferred model by setting the following environment variables:
+toolboxAi supports both Together.ai hosted models and local models through Ollama. Configure your preferred model by setting the following environment variables:
 
 ```
 # Create a .env file in the backend directory
