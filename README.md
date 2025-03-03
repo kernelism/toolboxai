@@ -92,7 +92,7 @@ DOCUMENTS_DIR='./documents'
 ### Feature log
 - [ ] Docker support
 - [ ] Support follow up questions on notes and general qns.
-- [ ] Support Open AI models.
+- [x] Support Open AI models.
 - [ ] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
 - [ ] Support querying on images?
