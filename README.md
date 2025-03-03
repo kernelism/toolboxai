@@ -24,8 +24,6 @@ Currently in beta.
 
 ![screenshot1](./assets/ss4.png)
 
-![screenshot1](./assets/ss5.png)
-
 ### Setup
 
 ```
@@ -61,7 +59,7 @@ touch backend/.env
 
 ```
 # Required: Choose your model backend
-MODEL_BACKEND=together_ai  # Options: "together_ai" or "local"
+MODEL_BACKEND=together_ai  # Options: "togetherai", "openai" or "local"
 
 # For Together.ai
 API_KEY=your_api_key_here
@@ -75,19 +73,6 @@ OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
 # documents path where your papers are stored
 DOCUMENTS_DIR='./documents'
 ```
-
-#### Together.ai Setup
-
-- Create an account at Together.ai
-- Generate an API key from your dashboard
-- Set the environment variables as shown above with your API key and preferred model
-
-#### Ollama Setup
-
-- Install Ollama from ollama.ai
-- Pull your preferred model: ollama pull llama2 (or another model)
-- Start the Ollama server: ollama serve
-- Set the environment variables to use your local model
 
 ### Feature log
 - [ ] Docker support

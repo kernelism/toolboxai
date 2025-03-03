@@ -31,7 +31,7 @@ export default function Notes({ notes, setNotes, doc }) {
     } else {
       console.log("No doc id found!!");
     }
-  }, [notes, doc]);
+  }, [notes]);
 
   const deleteNote = (index) => {
     if (!notes || notes.length === 0) return;
