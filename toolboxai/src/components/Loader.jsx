@@ -1,15 +1,16 @@
 import React from 'react';
 import { PdfViewer as PdfComponent } from '../subcomponents';
-import LoaderLogo from "../assets/loader.png";
 
-const Loader = ({isLoading}) => {
-  if(!isLoading) return null;
+const Loader = ({ isLoading }) => {
+  if (!isLoading) return null;
   return (
-    <PdfComponent.LoaderContainer>
-      <PdfComponent.Loader src={LoaderLogo}/>
-      <PdfComponent.LoaderText>Loading...</PdfComponent.LoaderText>
-    </PdfComponent.LoaderContainer>
-  )
-}
+    <PdfComponent.LoaderOverlay>
+      <div style={{ textAlign: "center" }}>
+        <PdfComponent.LoaderSpinner />
+        <PdfComponent.LoaderText>Loading...</PdfComponent.LoaderText>
+      </div>
+    </PdfComponent.LoaderOverlay>
+  );
+};
 
-export default Loader
+export default Loader;

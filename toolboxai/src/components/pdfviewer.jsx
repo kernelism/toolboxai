@@ -49,7 +49,7 @@ const PdfViewer = ({ pdf, addNote, setFullPdfText }) => {
       try {
         setIsLoading(true);
         const response = await fetch(
-          `http://localhost:8080/documents/${docId}`
+          `${process.env.REACT_APP_API_PATH}/documents/${docId}`
         );
 
         if (!response.ok)
@@ -113,10 +113,6 @@ const PdfViewer = ({ pdf, addNote, setFullPdfText }) => {
           <ControlPanel
             scale={scale}
             setScale={setScale}
-            numPages={numPages}
-            pageNumber={pageNumber}
-            setPageNumber={setPageNumber}
-            file={{ url: pdf }}
           />
           <Document file={pdfData} onLoadSuccess={onDocumentLoadSuccess}>
             {/* Render all pages as a scrollable container */}

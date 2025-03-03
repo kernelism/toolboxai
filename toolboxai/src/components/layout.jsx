@@ -91,7 +91,7 @@ const Layout = () => {
           onMouseDown={(e) => handleDragRight(e, setNotesWidth)}
         />
         <LayoutSub.TopSection style={{ height: `${notesHeight}%` }}>
-          <Notes notes={notes} setNotes={setNotes} docId={selectedPdf}/>
+          <Notes notes={notes} setNotes={setNotes} doc={selectedPdf}/>
         </LayoutSub.TopSection>
 
         <LayoutSub.VResizer onMouseDown={(e) => handleDragVertical(e)} />

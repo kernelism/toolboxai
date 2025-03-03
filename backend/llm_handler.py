@@ -12,38 +12,76 @@ load_dotenv()
 
 def send_llm_request(request: AskRequest):
     """
-    Sends a request to the LLM, using either Together AI (cloud) or Ollama (local).
+    Dispatches the request to the appropriate LLM backend.
     """
     if settings.MODEL_BACKEND == "together_ai":
-        if not settings.API_KEY:
-            raise HTTPException(status_code=500, detail="Together AI API key is missing")
-
-        payload = {
-            "model": settings.MODEL,
-            "prompt": utils.prompt_builder(request),
-            "max_tokens": 300,
-        }
-        headers = {"Authorization": f"Bearer {settings.API_KEY}"}
-
-        try:
-            response = requests.post(
-                settings.API_URL,
-                json=payload,
-                headers=headers,
-                timeout=30
-            )
-            response.raise_for_status()
-            return response.json().get("choices", [{}])[0].get("text", "").strip()
-
-        except requests.RequestException as e:
-            logger.error(f"Error calling Together AI: {e}")
-            raise HTTPException(status_code=500, detail="Failed to fetch response from Together AI")
-
+        return send_together_ai_request(request)
+    elif settings.MODEL_BACKEND == "openai":
+        return send_openai_request(request)
     elif settings.MODEL_BACKEND == "local":
         return send_local_request(request)
-
     else:
-        raise HTTPException(status_code=500, detail="Invalid MODEL_BACKEND value. Use 'together_ai' or 'local'.")
+        raise HTTPException(status_code=500, detail="Invalid MODEL_BACKEND value. Use 'together_ai', 'openai', or 'local'.")
+
+def send_together_ai_request(request: AskRequest):
+    """
+    Sends a request to Together AI.
+    """
+    if not settings.API_KEY:
+        raise HTTPException(status_code=500, detail="Together AI API key is missing")
+
+    payload = {
+        "model": settings.MODEL,
+        "prompt": utils.prompt_builder(request),
+        "max_tokens": 300,
+    }
+    headers = {"Authorization": f"Bearer {settings.API_KEY}"}
+
+    try:
+        response = requests.post(
+            settings.API_URL,
+            json=payload,
+            headers=headers,
+            timeout=30
+        )
+        response.raise_for_status()
+        return response.json().get("choices", [{}])[0].get("text", "").strip()
+    except requests.RequestException as e:
+        logger.error(f"Error calling Together AI: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch response from Together AI")
+
+def send_openai_request(request: AskRequest):
+    """
+    Sends a request to OpenAI.
+    """
+    if not settings.API_KEY:
+        raise HTTPException(status_code=500, detail="OpenAI API key is missing")
+
+    payload = {
+        "model": settings.MODEL,
+        "messages": [
+            {"role": "system", "content": "You are a helpful AI assistant."},
+            {"role": "user", "content": utils.prompt_builder(request)}
+        ],
+        "max_tokens": 300,
+    }
+    headers = {
+        "Authorization": f"Bearer {settings.API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    try:
+        response = requests.post(
+            "https://api.openai.com/v1/chat/completions",
+            json=payload,
+            headers=headers,
+            timeout=30
+        )
+        response.raise_for_status()
+        return response.json().get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+    except requests.RequestException as e:
+        logger.error(f"Error calling OpenAI: {e}")
+        raise HTTPException(status_code=500, detail="Failed to fetch response from OpenAI")
 
 def send_local_request(request: AskRequest):
     """

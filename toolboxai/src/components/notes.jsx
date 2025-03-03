@@ -13,11 +13,16 @@ function CardContent({ children }) {
   return <div className="mt-2">{children}</div>;
 }
 
-export default function Notes({ notes, setNotes, docId }) {
+export default function Notes({ notes, setNotes, doc }) {
   const [selectedNote, setSelectedNote] = useState(null);
 
   useEffect(() => {
-    console.log("Notes updated:", notes);
+    console.log("Notes changed!")
+    if (doc) {  
+      localStorage.setItem(`notes_${doc.id}`, JSON.stringify(notes));
+    }else {
+      console.log("No doc id found!!")
+    }
   }, [notes]);
 
   const deleteNote = (index) => {
@@ -27,7 +32,7 @@ export default function Notes({ notes, setNotes, docId }) {
     setNotes(updatedNotes);
 
     // Update localStorage if a PDF is selected
-    const selectedPdfId = docId;
+    const selectedPdfId = doc;
     if (selectedPdfId) {
       localStorage.setItem(`notes_${selectedPdfId}`, JSON.stringify(updatedNotes));
     }

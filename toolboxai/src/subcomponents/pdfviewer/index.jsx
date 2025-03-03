@@ -7,7 +7,9 @@ import {
     PageInput,
     LoaderContainer,
     Loader,
-    LoaderText
+    LoaderText,
+    LoaderOverlay,
+    LoaderSpinner
 } from "./pdfviewer";
 
 export default function PdfViewer({children, ...restProps}) {
@@ -46,4 +48,12 @@ PdfViewer.Loader = function PdfViewerLoader({children, ...restProps}) {
 
 PdfViewer.LoaderText = function PdfViewerLoaderText({children, ...restProps}) {
     return <LoaderText {...restProps}>{children}</LoaderText>
+}
+
+PdfViewer.LoaderSpinner = function PdfViewerLoaderText({children, ...restProps}) {
+    return <LoaderSpinner {...restProps}>{children}</LoaderSpinner>
+}
+
+PdfViewer.LoaderOverlay = function PdfViewerLoaderText({children, ...restProps}) {
+    return <LoaderOverlay {...restProps}>{children}</LoaderOverlay>
 }

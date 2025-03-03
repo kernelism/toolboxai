@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   display: flex;
@@ -67,4 +67,32 @@ export const Loader = styled.img`
 export const LoaderText = styled.p`
   font-size: 1.5rem;
   margin-top: 1rem;
+`;
+
+const LoaderSpin = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+export const LoaderOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+`;
+
+export const LoaderSpinner = styled.div`
+  width: 60px;
+  height: 60px;
+  border: 6px solid #ccc;
+  border-top: 6px solid #007bff;
+  border-radius: 50%;
+  animation: ${LoaderSpin} 1s linear infinite;
 `;
