@@ -96,7 +96,8 @@ DOCUMENTS_DIR='./documents'
 - [ ] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
 - [ ] Support querying on images?
-- [ ] UI Refresh?
+- [x] UI Refresh?
+- [ ] Move to styled components
 
 ### Issue log
 - [x] Cannot select text from multiple pdf pages
