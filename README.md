@@ -9,12 +9,7 @@
 toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai integration or locally hosted ollama models.
 Currently in beta.
 
-[NotebookLM](https://notebooklm.google/) is quite good, but a few reasons why I wouldn't use it.
-- Google just wants you to be the source of research articles to be fed to their LLMs, because otherwise its "unethical".
-- It doesn't let you select text and ask questions, which I personally needed.
-
 ### How it looks
-*Ignore the response quality. Used a pretty small model to test the work*
 
 ![screenshot1](./assets/ss1.png)
 
@@ -50,7 +45,7 @@ python server.py
 ```
 
 ### Model Configuration
-toolboxAi supports both Together.ai hosted models and local models through Ollama. Configure your preferred model by setting the following environment variables:
+toolboxAi supports [together.ai](https://api.together.ai/models), [openai](https://platform.openai.com/docs/models) hosted models and local models through [ollama](https://ollama.com/library). Configure your preferred model by setting the following environment variables:
 
 ```
 # Create a .env file in the backend directory
