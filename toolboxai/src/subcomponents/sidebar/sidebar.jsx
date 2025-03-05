@@ -1,99 +1,78 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import {FileText} from 'lucide-react'
 
-// Styled components for the Notes layout
-export const SidebarContainer = styled.div`
+export const SidebarLayout = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 1rem;
-  overflow-y: auto;
+  height: 100vh;
+  background: white;
+  border-right: 1px solid #ddd;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 `;
 
 export const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-export const Title = styled.h2`
-  margin: 0;
-  color: #333;
-  font-size: 1.2rem;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
+  background: white;
 `;
 
 export const SearchBox = styled.input`
-  padding: 0.5rem;
-  border: 1px solid #ddd;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  font-size: 0.9rem;
-`;
-
-export const CardsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 1rem;
-  padding: 0.5rem 0;
-`;
-
-export const Card = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
-  background-color: white;
-  
-  &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  &:focus {
+    outline: none;
+    border-color: #ffbe42;
+    box-shadow: 0 0 5px rgba(255, 190, 66, 0.5);
   }
 `;
 
-export const CardThumbnail = styled.div`
-  height: 120px;
-  background-color: #f0f0f0;
+export const ListContainer = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.5rem;
+`;
+
+export const ListItem = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  position: relative;
+  padding: 10px;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  &:hover {
+    background: #f9f9f9;
+    border-left-color: #ffbe42;
+  }
 `;
 
-export const ThumbnailImage = styled.img`
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
+export const FileIcon = styled(FileText)`
+width: 20px;
+height: 20px;
 `;
 
-export const PdfIcon = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #e74c3c;
-  font-size: 2rem;
+
+export const FileInfo = styled.div`
+  flex: 1;
+  margin-left: 10px;
 `;
 
-export const CardInfo = styled.div`
-  padding: 0.75rem;
-`;
-
-export const CardTitle = styled.h3`
+export const FileTitle = styled.h3`
+  font-size: 14px;
+  font-weight: 600;
   margin: 0;
-  font-size: 0.85rem;
-  font-weight: 500;
   color: #333;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
-export const CardMeta = styled.p`
-  margin: 0.25rem 0 0;
-  font-size: 0.7rem;
-  color: #888;
+export const FileMeta = styled.div`
+  font-size: 12px;
+  color: #666;
+  display: flex;
+  gap: 5px;
 `;
 
 export const EmptyState = styled.div`
@@ -104,55 +83,15 @@ export const EmptyState = styled.div`
   height: 100%;
   color: #888;
   text-align: center;
-  padding: 2rem;
-`;
-export const ListContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
-`;
-
-export const ListItem = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background-color: #f9f9f9;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  .loading-icon {
+    color: #ff9f00;
+    animation: spin 1s linear infinite;
   }
-`;
-
-export const FileIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 40px;
-  min-height: 40px;
-  color: #e74c3c;
-  font-size: 1.5rem;
-  margin-right: 1rem;
-`;
-
-export const FileInfo = styled.div`
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const FileTitle = styled(CardTitle)`
-  font-size: 0.9rem;
-`;
-
-export const FileMeta = styled(CardMeta)`
-  display: flex;
-  gap: 0.5rem;
+  .separator {
+    color: #ff9f00;
+  }
+  .empty-icon {
+    color: #ccc;
+  }
 `;

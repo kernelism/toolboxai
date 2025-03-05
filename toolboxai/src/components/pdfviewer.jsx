@@ -28,7 +28,7 @@ const PdfViewer = ({ pdf, addNote, setFullPdfText }) => {
       let extractedText = "";
   
       // Extract text from the first page
-      for (let i = 1; i < 2; i++) {
+      for (let i = 1; i < pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         const pageText = textContent.items.map(item => item.str).join(" ");
