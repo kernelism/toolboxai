@@ -71,13 +71,10 @@ DOCUMENTS_DIR='./documents'
 
 ### Feature log
 - [ ] Docker support
-- [ ] Support follow up questions on notes and general qns.
-- [x] Support Open AI models.
+- [ ] Support follow up questions on notes.
 - [ ] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
-- [ ] Support querying on images?
-- [x] UI Refresh?
-- [ ] Move to styled components
+- [ ] Support querying on images
 
 ### Issue log
 - [x] Cannot select text from multiple pdf pages
