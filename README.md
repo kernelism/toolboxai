@@ -6,8 +6,7 @@
 
 ### Overview
 
-toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai integration or locally hosted ollama models.
-Currently in beta.
+toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai, OpenAI or locally hosted ollama models. Work in progress.
 
 ### How it looks
 
@@ -26,7 +25,6 @@ git clone https://github.com/MinatoNamikaze02
 ```
 
 #### Frontend 
-
 ```
 cd toolboxai
 
@@ -34,7 +32,6 @@ npm install && npm start
 ```
 
 #### Backend
-
 ```
 cd backend
 python -m venv local_env #optional
@@ -70,6 +67,13 @@ DOCUMENTS_DIR='./documents'
 ```
 
 ### Feature log
+- [x] Select text and ask questions.
+- [x] Ask general questions on the entire pdf.
+- [x] Save notes for each pdf in [localstorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
+- [x] Select text across different pages of a pdf.
+- [x] View notes on focus mode with context, question and answer highlighted.
+- [x] Delete notes and clear conversation any time.
+- [x] Pdf viewer and zoom.
 - [ ] Docker support
 - [ ] Support follow up questions on notes.
 - [ ] Support uploading pdfs.
