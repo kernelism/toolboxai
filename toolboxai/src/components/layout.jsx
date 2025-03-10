@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Sidebar from "./Sidebar";
 import PdfViewer from "./PdfViewer";
-import Notes from "./notes";
+import Notes from "./Notes";
 import { Layout as LayoutSub } from "../subcomponents";
 import AskEntirePdf from "./AskEntirePdf";
 
