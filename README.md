@@ -21,7 +21,7 @@ toolboxAi is an AI reading assistant for research papers. It allows you to selec
 ### Setup
 
 ```
-git clone https://github.com/MinatoNamikaze02/toolboxai
+git clone https://github.com/MinatoNamikaze02/toolboxai.git
 ```
 
 #### Frontend 
