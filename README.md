@@ -77,7 +77,6 @@ DOCUMENTS_DIR='./documents'
 - [x] PDF upload and delete.
 - [ ] Docker support
 - [ ] Support follow up questions on notes.
-- [ ] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
 - [ ] Support querying on images
 
