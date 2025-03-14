@@ -74,6 +74,7 @@ DOCUMENTS_DIR='./documents'
 - [x] View notes on focus mode with context, question and answer highlighted.
 - [x] Delete notes and clear conversation any time.
 - [x] Pdf viewer and zoom.
+- [x] PDF upload and delete.
 - [ ] Docker support
 - [ ] Support follow up questions on notes.
 - [ ] Support uploading pdfs.
@@ -87,6 +88,7 @@ DOCUMENTS_DIR='./documents'
 - [x] Right side scroll z-index issues
 - [x] cannot ask question on entire pdf
 - [ ] "Ask a question" box explodes in size of answer is too long. temporary fix with max tokens
+- [ ] Upload button to the right of search bar (CSS issue)
 
 ### License
 MIT
