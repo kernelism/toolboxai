@@ -1,4 +1,4 @@
-import { Layout } from "../components";
+import Layout from "../components/Layout.jsx";
 function Home() {
     return (
       <div className="App">
