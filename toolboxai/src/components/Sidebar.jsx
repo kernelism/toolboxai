@@ -4,6 +4,7 @@ import { Sidebar as SidebarComponent } from "../subcomponents";
 import axios from "axios";
 import { Search, FileText, Loader } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { TrashIcon } from "@heroicons/react/24/solid";
 
 const fetchPdfsFromFolder = async () => {
   try {
@@ -36,6 +37,7 @@ const formatDate = (date) => {
     day: "numeric",
   });
 };
+
 
 const Sidebar = ({ setSelectedPdf }) => {
   const [pdfs, setPdfs] = useState([]);
@@ -131,6 +133,78 @@ const Sidebar = ({ setSelectedPdf }) => {
     </div>
   );
 
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const reloadSidebar = () => {
+    setRefreshTrigger(prev => prev + 1); // Force re-fetch
+  };
+  
+  // Fetch PDFs whenever refreshTrigger changes
+  useEffect(() => {
+    const loadPdfs = async () => {
+      setLoading(true);
+      const fetchedPdfs = await fetchPdfsFromFolder();
+      setPdfs(fetchedPdfs);
+      setLoading(false);
+    };
+  
+    loadPdfs();
+  }, [refreshTrigger]);
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_PATH}/documents/upload`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+  
+      if (response.data.success) {
+        alert("File uploaded successfully!");
+        setTimeout(() => {
+          reloadSidebar();
+        }, 50);
+      } else {
+        alert(response.data.message || "Failed to upload file.");
+      }
+    } catch (error) {
+      console.error("Upload failed:", error);
+      alert(error.response?.data?.detail || "Failed to upload file.");
+    }
+  };
+
+
+  const handleDeletePdf = async (pdfId) => {
+    if (!window.confirm("Are you sure you want to delete this PDF?")) return;
+  
+    const url = `${process.env.REACT_APP_API_PATH}/documents/${pdfId}`;
+    // console.log("Attempting DELETE:", url); 
+  
+    try {
+      const response = await axios.delete(url);
+      // console.log("Response:", response); 
+  
+      if (response.status === 200) {
+        alert("File deleted successfully!");
+        // reloadSidebar();
+        window.location.reload();
+      } else {
+        alert(response.data?.message || "Failed to delete file.");
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      alert(error.response?.data?.detail || "Failed to delete file.");
+    }
+  };
+  
+
   const EmptyState = ({ children }) => (
     <div className="flex flex-col items-center justify-center h-full p-6 text-center text-gray-500">
       {children}
@@ -139,13 +213,12 @@ const Sidebar = ({ setSelectedPdf }) => {
 
   return (
     <StyledSidebar>
-      <Header>
-        <SearchBox 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-      </Header>
-
+<Header>
+  <SearchBox 
+    value={searchQuery}
+    onChange={(e) => setSearchQuery(e.target.value)}
+  />
+</Header>
       <AnimatePresence>
         {loading ? (
           <EmptyState>
@@ -173,8 +246,18 @@ const Sidebar = ({ setSelectedPdf }) => {
                         <span>{pdf.size}</span>
                         <span className="text-amber-500">•</span>
                         <span>{pdf.pages} pages</span>
+                        {/* <span>ID:{pdf.id}</span> */}
                       </FileMeta>
                     </FileInfo>
+                    <button
+                      className="ml-auto p-2 text-red-500 hover:text-red-700 hover:bg-red-100 rounded-full transition duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering PDF click
+                        handleDeletePdf(pdf.id);
+                      }}
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
                   </ListItem>
                 </motion.div>
               ))}
@@ -187,8 +270,22 @@ const Sidebar = ({ setSelectedPdf }) => {
           </EmptyState>
         )}
       </AnimatePresence>
+      <div className="bg-amber-500 text-white p-3 cursor-pointer hover:bg-amber-600 group w-auto inline-flex justify-center items-center space-x-2">
+  <label className="flex items-center space-x-2 cursor-pointer">
+    <FileText className="w-5 h-5" />
+    <span className="text-sm font-medium">Upload PDF</span>
+    <input 
+      type="file" 
+      accept="application/pdf" 
+      className="hidden" 
+      onChange={handleFileUpload} 
+    />
+  </label>
+</div>
+
     </StyledSidebar>
   );
 };
+
 
 export default Sidebar;
