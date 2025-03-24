@@ -103,7 +103,43 @@ You can save the responses as notes as well
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
-(idk if this is required, just in case))
+(idk if this is required, just in case)
+
+## 🚀 Feature Log  
+✅ **Implemented Features**  
+- ✅ Select text and ask questions  
+- ✅ Ask general questions on the entire PDF  
+- ✅ Save notes for each PDF in [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)  
+- ✅ Select text across different pages of a PDF  
+- ✅ View notes in **Focus Mode** (context, question, and answer highlighted)  
+- ✅ Delete notes and clear conversations anytime  
+- ✅ PDF viewer with zoom support  
+- ✅ PDF upload and delete  
+
+🛠️ **Upcoming Features**  
+- ⏳ Docker support  
+- ⏳ Support follow-up questions on notes  
+- ⏳ Enable PDF scraping using DOI  
+- ⏳ Querying support for images  
+
+---
+
+## 🐞 Issue Log  
+✅ **Fixed Issues**  
+- ✅ Unable to select text from multiple PDF pages  
+- ✅ Unable to delete notes  
+- ✅ Clicking outside before saving a note deletes **question & context** but retains **answer**  
+- ✅ Scroll z-index issues on the right panel  
+- ✅ Unable to ask questions on the entire PDF  
+
+⚠️ **Known Issues**  
+- ⚠️ `"Ask a Question"` box **expands excessively** for long answers (temporary fix with max tokens)  
+- ⚠️ Upload button misaligned to the right of the search bar (**CSS issue**)  
+
+---
+
+Let me know if you want more tweaks! 🚀  
+
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
