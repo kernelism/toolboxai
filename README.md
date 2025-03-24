@@ -1,24 +1,46 @@
+<p align="center">
+ <img src="./assets/toolboxai.png" alt="Toolbox.ai Logo" width="200"/>
+</p>
+
+<h1 align="center">toolbox.ai</h1>
+
 <div align="center">
-  <h1>toolboxAi</h1>
-  <!-- You can add your logo here with: -->
-  <img src="./assets/toolboxai.png" alt="Toolbox.ai Logo" width="200"/>
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/MinatoNamikaze02/toolboxai.svg)](https://github.com/MinatoNamikaze02/toolboxai/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/MinatoNamikaze02/toolboxai.svg)](https://github.com/MinatoNamikaze02/toolboxai/pulls)
+[![License](https://img.shields.io/github/license/MinatoNamikaze02/toolboxai.svg)](https://github.com/MinatoNamikaze02/toolboxai/blob/main/LICENSE)
+
+
 </div>
 
-### Overview
+---
 
-toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai, OpenAI or locally hosted ollama models. Work in progress.
+<p align="center"> An AI reading assistant for research papers
+    <br> 
+</p>
 
-### How it looks
+## 📝 Table of Contents
 
-![screenshot1](./assets/ss1.png)
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Usage](#usage)
+- [Deployment](#deployment)
+- [Built Using](#built_using) <!-- [TODO](../TODO.md) - [Contributing](../CONTRIBUTING.md) -->
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgement)
 
-![screenshot1](./assets/ss2.png)
+## 🧐 About <a name = "about"></a>
 
-![screenshot1](./assets/ss3.png)
+toolbox.ai is an AI reading assistant for research papers.
+It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference.
+The platform supports various LLMs through Together.ai, OpenAI or locally hosted ollama models.
+<br> 
+<br> Work in progress...
 
-![screenshot1](./assets/ss4.png)
+## 🏁 Getting Started <a name = "getting_started"></a>
 
-### Setup
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ```
 git clone https://github.com/MinatoNamikaze02/toolboxai.git
@@ -65,28 +87,37 @@ OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
 # documents path where your papers are stored
 DOCUMENTS_DIR='./documents'
 ```
+## 🎈 Usage <a name="usage"></a>
 
-### Feature log
-- [x] Select text and ask questions.
-- [x] Ask general questions on the entire pdf.
-- [x] Save notes for each pdf in [localstorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-- [x] Select text across different pages of a pdf.
-- [x] View notes on focus mode with context, question and answer highlighted.
-- [x] Delete notes and clear conversation any time.
-- [x] Pdf viewer and zoom.
-- [ ] Docker support
-- [ ] Support follow up questions on notes.
-- [ ] Support uploading pdfs.
-- [ ] Support scraping pdfs with doi?
-- [ ] Support querying on images
+![screenshot1](./assets/ss1.png)
+HomePage
 
-### Issue log
-- [x] Cannot select text from multiple pdf pages
-- [x] Cannot delete notes
-- [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
-- [x] Right side scroll z-index issues
-- [x] cannot ask question on entire pdf
-- [ ] "Ask a question" box explodes in size of answer is too long. temporary fix with max tokens
+![screenshot1](./assets/ss2.png)
+Select the text you want to know more about
 
-### License
-MIT
+![screenshot1](./assets/ss3.png)
+Ask questions about the texts
+
+![screenshot1](./assets/ss4.png)
+You can save the responses as notes as well
+
+## 🚀 Deployment <a name = "deployment"></a>
+
+(idk if this is required, just in case))
+
+## ⛏️ Built Using <a name = "built_using"></a>
+
+- [ReactJS](https://react.dev/) - JavaScript Library for Building User Interfaces  
+- [Python](https://www.python.org/) - Programming Language  
+- [TogetherAI](https://www.together.ai/) - AI Model Hosting and API Platform  
+
+
+## ✍️ Authors <a name = "authors"></a>
+
+- [@MinatoNamikaze02](https://github.com/MinatoNamikaze02/) - Idea & Initial work
+- [@pranavrajendran18](https://github.com/pranavrajendran18) - Collaborator
+
+
+## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+MIT License
