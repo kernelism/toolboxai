@@ -6,6 +6,8 @@
 
 ### Overview
 
+**Work in progress!**
+
 toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai, OpenAI or locally hosted ollama models. Work in progress.
 
 ### How it looks
