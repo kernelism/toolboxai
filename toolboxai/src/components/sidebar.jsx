@@ -1,8 +1,8 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Sidebar as SidebarComponent } from "../subcomponents";
 import axios from "axios";
-import { Search, FileText, Loader } from "lucide-react";
+import { Search, FileText, Loader, Upload } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const fetchPdfsFromFolder = async () => {
@@ -41,6 +41,8 @@ const Sidebar = ({ setSelectedPdf }) => {
   const [pdfs, setPdfs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const loadPdfs = async () => {
@@ -62,7 +64,39 @@ const Sidebar = ({ setSelectedPdf }) => {
     setSelectedPdf(pdf);
   };
 
-  // Custom styled components to match theme
+  const handleUploadClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append('file', file);
+
+      await axios.post(`${process.env.REACT_APP_API_PATH}/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      // Refresh the PDF list after upload
+      const fetchedPdfs = await fetchPdfsFromFolder();
+      setPdfs(fetchedPdfs);
+      
+      // Reset the file input
+      e.target.value = null;
+    } catch (error) {
+      console.error("Error uploading PDF:", error);
+      console.error("Error details:", error.response ? error.response.data : "No response data");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const StyledSidebar = ({ children }) => (
     <div className="h-screen w-full bg-white border-r border-gray-200 shadow-sm overflow-hidden flex flex-col">
       {children}
@@ -75,16 +109,33 @@ const Sidebar = ({ setSelectedPdf }) => {
     </div>
   );
 
-  const SearchBox = ({ value, onChange }) => (
-    <div className="relative">
-      <input
-        type="text"
-        placeholder="Search files..."
-        value={value}
-        onChange={onChange}
-        className="w-full p-2 pl-9 pr-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
-      />
-      <Search className="absolute left-2 top-2.5 text-gray-400" size={16} />
+  const SearchContainer = () => (
+    <div className="flex gap-2">
+      <div className="relative flex-1">
+        <input
+          type="text"
+          placeholder="Search files..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full p-2 pl-9 pr-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
+        />
+        <Search className="absolute left-2 top-2.5 text-gray-400" size={16} />
+      </div>
+      
+      <button 
+        onClick={handleUploadClick}
+        disabled={uploading}
+        className={`p-2 rounded-md border border-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-400 ${uploading ? 'opacity-70 cursor-not-allowed' : ''}`}
+      >
+        <Upload size={20} className={`${uploading ? 'animate-pulse' : ''} text-amber-500`} />
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          onChange={handleFileChange} 
+          className="hidden"
+          accept=".pdf"
+        />
+      </button>
     </div>
   );
 
@@ -140,10 +191,13 @@ const Sidebar = ({ setSelectedPdf }) => {
   return (
     <StyledSidebar>
       <Header>
-        <SearchBox 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+        <SearchContainer />
+        {uploading && (
+          <div className="mt-2 flex items-center justify-center text-xs text-amber-600">
+            <Loader size={12} className="animate-spin mr-1" /> 
+            Uploading PDF...
+          </div>
+        )}
       </Header>
 
       <AnimatePresence>
@@ -183,7 +237,7 @@ const Sidebar = ({ setSelectedPdf }) => {
         ) : (
           <EmptyState>
             <Search className="text-gray-400 mb-2" size={24} />
-            <p>No documents found. Try a different search or folder.</p>
+            <p>No documents found. Try a different search or upload a PDF.</p>
           </EmptyState>
         )}
       </AnimatePresence>

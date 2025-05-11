@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Rocket, Send } from "lucide-react";
 import axios from "axios";
 
-const AskEntirePdf = ({ pdfText }) => {
+const AskEntirePdf = ({selectedPdf}) => {
   const [messages, setMessages] = useState([]);
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +16,7 @@ const AskEntirePdf = ({ pdfText }) => {
     
     if (!prompt.trim()) return;
     
-    if (!pdfText) {
+    if (!selectedPdf) {
       alert("Select a pdf to continue");
       console.error("PDF text not found");
       return;
@@ -30,12 +30,14 @@ const AskEntirePdf = ({ pdfText }) => {
     try {
       const data = {
         "prompt": prompt,
-        "selectedText": pdfText,
+        "title": selectedPdf.title,
+        "id": selectedPdf.id
       };
       
       console.log(data);
       const response = await axios.post(`${process.env.REACT_APP_API_PATH}/ask`, data);
-      const botResponse = { type: "answer", text: response.data.answer };
+      console.log(response)
+      const botResponse = { type: "answer", text: response.data };
       setMessages((prev) => [...prev, botResponse]);
       setLoading(false);
     } catch (error) {

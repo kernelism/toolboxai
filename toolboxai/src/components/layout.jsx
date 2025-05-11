@@ -11,7 +11,6 @@ const Layout = () => {
   const [notesHeight, setNotesHeight] = useState(60);
   const [selectedPdf, setSelectedPdf] = useState(null);
   const [notes, setNotes] = useState([]);
-  const [fullPdfText, setFullPdfText] = useState("");
 
   useEffect(() => {
     if (selectedPdf) {
@@ -83,7 +82,7 @@ const Layout = () => {
       <LayoutSub.PViewer
         style={{ width: `${100 - sidebarWidth - notesWidth}%` }}
       >
-        <PdfViewer pdf={selectedPdf} addNote={addNote} setFullPdfText={setFullPdfText}/>
+        <PdfViewer pdf={selectedPdf} addNote={addNote}/>
       </LayoutSub.PViewer>
 
       <LayoutSub.Nbar style={{ width: `${notesWidth}%` }}>
@@ -97,7 +96,7 @@ const Layout = () => {
         <LayoutSub.VResizer onMouseDown={(e) => handleDragVertical(e)} />
 
         <LayoutSub.BottomSection style={{ height: `${100 - notesHeight}%` }}>
-          <AskEntirePdf pdfText={fullPdfText}/>
+          <AskEntirePdf selectedPdf={selectedPdf}/>
         </LayoutSub.BottomSection>
       </LayoutSub.Nbar>
     </LayoutSub>
