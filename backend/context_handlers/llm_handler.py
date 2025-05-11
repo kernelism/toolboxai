@@ -14,31 +14,6 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 class LLMHandler:
-    def extract_titles(self, page_text: str) -> List[str]:
-        prompt = f"""
-            Extract all the section or subsection titles from the text below.
-            If no titles exist, return an empty list.
-            Only return a valid Python list of strings.
-
-            Text:
-            \"\"\"
-            {page_text}
-            \"\"\"
-            Titles:
-        """
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.2
-        )
-        output = response.choices[0].message.content.strip()
-
-        try:
-            titles = eval(output)
-            return titles if isinstance(titles, list) else []
-        except Exception:
-            return []
-        
     def send_llm_request(self, request: AskRequest):
         """
         Dispatches the request to the appropriate LLM backend.
@@ -84,7 +59,7 @@ class LLMHandler:
 
         payload = {
             "model": settings.MODEL,
-            "prompt": utils.prompt_builder(request),
+            "prompt": utils.research_q_prompt_builder(request),
             "max_tokens": 300,
         }
         headers = {"Authorization": f"Bearer {settings.API_KEY}"}
@@ -106,7 +81,6 @@ class LLMHandler:
         """
         Sends a request to OpenAI.
         """
-        logger.info(utils.prompt_builder(request))
         if not settings.API_KEY:
             raise HTTPException(status_code=500, detail="OpenAI API key is missing")
 
@@ -114,7 +88,7 @@ class LLMHandler:
             "model": settings.MODEL,
             "messages": [
                 {"role": "system", "content": "You are a helpful AI assistant."},
-                {"role": "user", "content": utils.prompt_builder(request)}
+                {"role": "user", "content": utils.research_q_prompt_builder(request)}
             ],
             "max_tokens": 300,
         }
@@ -145,7 +119,7 @@ class LLMHandler:
         try:
             payload = {
                 "model": settings.LOCAL_MODEL_NAME,
-                "prompt": utils.prompt_builder(request),
+                "prompt": utils.research_q_prompt_builder(request),
                 "stream": False  # Set to True if you want streaming responses
             }
             response = requests.post(settings.OLLAMA_API_URL + "/api/generate", json=payload, timeout=30)

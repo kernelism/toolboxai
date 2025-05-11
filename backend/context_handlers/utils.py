@@ -1,6 +1,6 @@
 import models
 
-def prompt_builder(request: models.AskRequest):
+def research_q_prompt_builder(request: models.AskRequest):
     return f"""
     You are a powerful research assistant who always answers questions using given context focusing on brevity and clarity.
 

@@ -5,7 +5,11 @@ import uuid
 import fitz  # PyMuPDF
 from context_handlers.llm_handler import LLMHandler
 from db.models import PageTitles
-from config import settings
+import logging
+
+# Initialize logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 class ChromaDBBase:
     def __init__(self):
@@ -32,8 +36,7 @@ class ChromaDBBase:
         doc_id = pdf_path.split("/")[-1]
         pages = self.load_pdf_pages(pdf_path)
         for idx, text in enumerate(pages):
-            titles = self.llm.extract_titles(text)
-            page_data = PageTitles(page_number=idx + 1, titles=titles, page_text=text)
+            page_data = PageTitles(page_number=idx + 1, page_text=text)
             
             metadata_dict = page_data.dict() if hasattr(page_data, 'dict') else page_data.model_dump()
             metadata_dict["doc_id"] = doc_id
