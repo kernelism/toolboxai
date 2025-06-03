@@ -60,12 +60,15 @@ poetry run uvicorn server:app --host 0.0.0.0 --port 8000
 ### Model Configuration
 toolboxAi supports [together.ai](https://api.together.ai/models), [openai](https://platform.openai.com/docs/models) hosted models and local models through [ollama](https://ollama.com/library). Configure your preferred model by setting the following environment variables:
 
-```
+#### Backend Configuration
+Create a `.env` file in the backend directory:
+```bash
 # Create a .env file in the backend directory
 touch backend/.env
 ```
 
-```
+Add the following variables to `backend/.env`:
+```bash
 # Required: Choose your model backend
 MODEL_BACKEND=together_ai  # Options: "togetherai", "openai" or "local"
 
@@ -80,6 +83,19 @@ OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
 
 # documents path where your papers are stored
 DOCUMENTS_DIR='./documents'
+```
+
+#### Frontend Configuration
+Create a `.env` file in the frontend directory:
+```bash
+# Create a .env file in the frontend directory
+touch frontend/.env
+```
+
+Add the following variable to `frontend/.env`:
+```bash
+# API endpoint for the backend server
+REACT_APP_API_PATH=http://localhost:8000
 ```
 
 ### Feature log
