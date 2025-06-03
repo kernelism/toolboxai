@@ -38,12 +38,14 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.9 }}
-          className="absolute bg-white/40 backdrop-blur-lg p-4 rounded-xl shadow-lg z-50 border border-gray-200"
+          className="absolute bg-white/40 backdrop-blur-lg p-4 rounded-xl shadow-soft z-50 border border-gray-100"
           style={{ top: position.y, left: position.x, maxWidth: "350px" }}
         >
           <div className="flex items-center mb-2">
-            <Rocket className="text-amber-500 mr-2" size={20} />
-            <h3 className="text-sm font-semibold text-gray-900">Ask a Question 🙂‍↕️</h3>
+            <div className="p-1.5 bg-blue-50 rounded-lg mr-2">
+              <Rocket className="text-blue-600" size={18} />
+            </div>
+            <h3 className="text-sm font-semibold text-gray-900">Ask a Question</h3>
           </div>
 
           {answerText ? (
@@ -51,12 +53,12 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="p-3 rounded-lg bg-gradient-to-r from-amber-400 to-amber-600 text-white shadow-sm mb-3"
+                className="p-3 rounded-lg bg-blue-600 text-white shadow-sm mb-3"
               >
                 <p className="text-sm leading-relaxed">{answerText}</p>
               </motion.div>
               <button
-                className="w-full flex items-center justify-center bg-gradient-to-r from-gray-800 to-gray-900 text-white p-2 rounded-lg hover:from-gray-700 hover:to-gray-800 transition duration-200"
+                className="w-full flex items-center justify-center bg-gray-900 text-white p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 onClick={handleSaveNote}
               >
                 <Bookmark size={16} className="mr-2" /> Save Note
@@ -64,21 +66,21 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
             </>
           ) : (
             <div>
-              <div className="text-sm text-gray-700 mb-2 p-2 bg-gray-50 rounded-lg">
-                <p className="italic text-xs">Selected text:</p>
+              <div className="text-sm text-gray-700 mb-2 p-2 bg-gray-50 rounded-lg border border-gray-100">
+                <p className="italic text-xs text-gray-500">Selected text:</p>
                 <p className="line-clamp-3">{selectedText}</p>
               </div>
               <div className="flex items-center mt-2 relative">
                 <input
                   type="text"
-                  className="w-full p-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-400 bg-white/80 text-sm"
+                  className="w-full p-2 pr-10 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white/80 text-sm transition-all"
                   placeholder="Ask about this selection..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyPress={handleKeyPress}
                 />
                 <button
-                  className="absolute right-1 p-1.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 transition duration-200 disabled:opacity-50"
+                  className="absolute right-1 p-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50"
                   onClick={handleSubmit}
                   disabled={loading || !prompt.trim()}
                 >
@@ -86,11 +88,11 @@ export default function TextSelectionPopup({ selectedText, answerText, setAnswer
                 </button>
               </div>
               {loading && (
-                <div className="mt-2 p-2 bg-gradient-to-r from-amber-200 to-amber-300 text-gray-700 rounded-lg">
+                <div className="mt-2 p-2 bg-blue-50 rounded-lg">
                   <div className="flex justify-center space-x-1">
-                    <div className="w-2 h-2 rounded-full bg-gray-700 animate-bounce"></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-700 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                    <div className="w-2 h-2 rounded-full bg-gray-700 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce"></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    <div className="w-2 h-2 rounded-full bg-blue-600 animate-bounce" style={{ animationDelay: "0.4s" }}></div>
                   </div>
                 </div>
               )}

@@ -6,6 +6,8 @@ import fitz  # PyMuPDF
 from context_handlers.llm_handler import LLMHandler
 from db.models import PageTitles
 import logging
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -16,10 +18,31 @@ class ChromaDBBase:
         self.client = chromadb.PersistentClient(path="chroma_db")
         self.collection = self.client.get_or_create_collection(name="documents")
         self.llm = LLMHandler()
+        self.thread_pool = ThreadPoolExecutor(max_workers=4)
 
     def load_pdf_pages(self, pdf_path: str) -> List[str]:
+        """Load PDF pages with optimized text extraction"""
         doc = fitz.open(pdf_path)
-        return [page.get_text() for page in doc]
+        pages = []
+        for page in doc:
+            # Extract text with optimized settings
+            text = page.get_text("text", sort=True)
+            # Clean up text
+            text = " ".join(text.split())  # Remove extra whitespace
+            pages.append(text)
+        return pages
+    
+    def process_page_batch(self, pages: List[str], doc_id: str, start_idx: int) -> List[tuple]:
+        """Process a batch of pages and return their metadata"""
+        batch_data = []
+        for idx, text in enumerate(pages):
+            page_num = start_idx + idx + 1
+            page_data = PageTitles(page_number=page_num, page_text=text)
+            metadata_dict = page_data.dict() if hasattr(page_data, 'dict') else page_data.model_dump()
+            metadata_dict["doc_id"] = doc_id
+            sanitized_metadata = self.sanitize_metadata(metadata_dict)
+            batch_data.append((text, sanitized_metadata, str(uuid.uuid4())))
+        return batch_data
     
     def sanitize_metadata(self, metadata: dict) -> dict:
         sanitized = {}
@@ -27,27 +50,35 @@ class ChromaDBBase:
             if isinstance(value, (str, int, float, bool)):
                 sanitized[key] = value
             elif isinstance(value, list):
-                sanitized[key] = ", ".join(map(str, value))  # Convert list to comma-separated string
+                sanitized[key] = ", ".join(map(str, value))
             else:
-                sanitized[key] = str(value)  # Fallback to string conversion
+                sanitized[key] = str(value)
         return sanitized
     
     def add_document(self, pdf_path: str):
+        """Add document to ChromaDB with optimized processing"""
         doc_id = pdf_path.split("/")[-1]
         pages = self.load_pdf_pages(pdf_path)
-        for idx, text in enumerate(pages):
-            page_data = PageTitles(page_number=idx + 1, page_text=text)
+        
+        # Process pages in batches
+        batch_size = 10  # Adjust based on your needs
+        for i in range(0, len(pages), batch_size):
+            batch = pages[i:i + batch_size]
+            batch_data = self.process_page_batch(batch, doc_id, i)
             
-            metadata_dict = page_data.dict() if hasattr(page_data, 'dict') else page_data.model_dump()
-            metadata_dict["doc_id"] = doc_id
-
-            sanitized_metadata = self.sanitize_metadata(metadata_dict)
-
+            # Prepare batch data
+            documents = [data[0] for data in batch_data]
+            metadatas = [data[1] for data in batch_data]
+            ids = [data[2] for data in batch_data]
+            
+            # Add batch to collection
             self.collection.add(
-                documents=[page_data.page_text],
-                metadatas=[sanitized_metadata],
-                ids=[str(uuid.uuid4())],
+                documents=documents,
+                metadatas=metadatas,
+                ids=ids
             )
+            
+            logger.info(f"Added batch {i//batch_size + 1} of {(len(pages) + batch_size - 1)//batch_size} for document {doc_id}")
 
     def delete_document_by_doc_id(self, doc_id: str):
         results = self.collection.get(where={"doc_id": doc_id})

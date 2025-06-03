@@ -70,7 +70,7 @@ const PdfViewer = ({ pdf, addNote }) => {
     });
 
     console.log("API Response:", response.data);
-    setLlmAnswer(response.data);
+    setLlmAnswer(response.data.message);
   };
 
   const handleOutsideClick = () => {

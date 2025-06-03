@@ -71,31 +71,49 @@ const Layout = () => {
   };
 
   return (
-    <LayoutSub>
-      <LayoutSub.Sbar style={{ width: `${sidebarWidth}%` }}>
+    <LayoutSub className="bg-gray-50">
+      <LayoutSub.Sbar 
+        style={{ width: `${sidebarWidth}%` }}
+        className="bg-white border-r border-gray-100 shadow-sm"
+      >
         <Sidebar setSelectedPdf={setSelectedPdf} />
         <LayoutSub.Rsizer
           onMouseDown={(e) => handleDragLeft(e, setSidebarWidth)}
+          className="bg-gray-100 hover:bg-blue-500 transition-colors"
         />
       </LayoutSub.Sbar>
 
       <LayoutSub.PViewer
         style={{ width: `${100 - sidebarWidth - notesWidth}%` }}
+        className="bg-white"
       >
         <PdfViewer pdf={selectedPdf} addNote={addNote}/>
       </LayoutSub.PViewer>
 
-      <LayoutSub.Nbar style={{ width: `${notesWidth}%` }}>
+      <LayoutSub.Nbar 
+        style={{ width: `${notesWidth}%` }}
+        className="bg-white border-l border-gray-100 shadow-sm"
+      >
         <LayoutSub.LRsizer
           onMouseDown={(e) => handleDragRight(e, setNotesWidth)}
+          className="bg-gray-100 hover:bg-blue-500 transition-colors"
         />
-        <LayoutSub.TopSection style={{ height: `${notesHeight}%` }}>
+        <LayoutSub.TopSection 
+          style={{ height: `${notesHeight}%` }}
+          className="border-b border-gray-100"
+        >
           <Notes notes={notes} setNotes={setNotes} doc={selectedPdf}/>
         </LayoutSub.TopSection>
 
-        <LayoutSub.VResizer onMouseDown={(e) => handleDragVertical(e)} />
+        <LayoutSub.VResizer 
+          onMouseDown={(e) => handleDragVertical(e)}
+          className="bg-gray-100 hover:bg-blue-500 transition-colors"
+        />
 
-        <LayoutSub.BottomSection style={{ height: `${100 - notesHeight}%` }}>
+        <LayoutSub.BottomSection 
+          style={{ height: `${100 - notesHeight}%` }}
+          className="bg-gray-50"
+        >
           <AskEntirePdf selectedPdf={selectedPdf}/>
         </LayoutSub.BottomSection>
       </LayoutSub.Nbar>
