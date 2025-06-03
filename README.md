@@ -24,21 +24,37 @@ toolboxAi is an AI reading assistant for research papers. It allows you to selec
 git clone https://github.com/MinatoNamikaze02/toolboxai.git
 ```
 
-#### Frontend 
+#### Using Docker (Recommended)
+The application is containerized using Docker and Docker Compose. Make sure you have Docker and Docker Compose installed on your system.
+
+```bash
+# Build and start the containers
+docker-compose up --build
+
+# The application will be available at:
+# Frontend: http://localhost:3000
+# Backend: http://localhost:8000
+```
+
+#### Manual Setup
+
+##### Frontend 
 ```
 cd toolboxai
 
 npm install && npm start
 ```
 
-#### Backend
-```
-cd backend
-python -m venv local_env #optional
-source local_env/bin/activate #optional
-pip install -r requirements.txt
+##### Backend
+The backend uses Poetry for dependency management. Make sure you have Poetry installed:
 
-python server.py
+```bash
+# Install Poetry (if not already installed)
+curl -sSL https://install.python-poetry.org | python3 -
+
+# Install dependencies and run the server
+poetry install
+poetry run uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
 ### Model Configuration
@@ -74,9 +90,9 @@ DOCUMENTS_DIR='./documents'
 - [x] View notes on focus mode with context, question and answer highlighted.
 - [x] Delete notes and clear conversation any time.
 - [x] Pdf viewer and zoom.
-- [ ] Docker support
-- [ ] Support follow up questions on notes.
-- [ ] Support uploading pdfs.
+- [x] Docker support
+- [x] Support follow up questions on notes.
+- [x] Support uploading pdfs.
 - [ ] Support scraping pdfs with doi?
 - [ ] Support querying on images
 
