@@ -3,13 +3,13 @@ version: '3.8'
 services:
   backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
-      - ./chroma_db:/app/chroma_db
+      - ./backend:/app
+      - ./data/chroma_db:/app/data/chroma_db
     environment:
       - PYTHONUNBUFFERED=1
     networks:
