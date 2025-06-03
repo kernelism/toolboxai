@@ -181,3 +181,5 @@ arango/
 
 *.gexf
 *.json
+
+chroma_db
