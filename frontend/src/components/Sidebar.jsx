@@ -42,6 +42,7 @@ const Sidebar = ({ setSelectedPdf }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -72,12 +73,28 @@ const Sidebar = ({ setSelectedPdf }) => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Reset error state
+    setUploadError(null);
+
+    // Validate file type
+    if (!file.name.toLowerCase().endsWith('.pdf')) {
+      setUploadError('Only PDF files are allowed');
+      return;
+    }
+
+    // Validate file size (e.g., 50MB limit)
+    const maxSize = 50 * 1024 * 1024; // 50MB in bytes
+    if (file.size > maxSize) {
+      setUploadError('File size must be less than 50MB');
+      return;
+    }
+
     try {
       setUploading(true);
       const formData = new FormData();
       formData.append('file', file);
 
-      await axios.post(`${process.env.REACT_APP_API_PATH}/upload`, formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_PATH}/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -91,7 +108,8 @@ const Sidebar = ({ setSelectedPdf }) => {
       e.target.value = null;
     } catch (error) {
       console.error("Error uploading PDF:", error);
-      console.error("Error details:", error.response ? error.response.data : "No response data");
+      const errorMessage = error.response?.data?.detail || error.message || "Failed to upload PDF";
+      setUploadError(errorMessage);
     } finally {
       setUploading(false);
     }
@@ -196,6 +214,11 @@ const Sidebar = ({ setSelectedPdf }) => {
           <div className="mt-2 flex items-center justify-center text-xs text-blue-600">
             <Loader size={12} className="animate-spin mr-1" /> 
             Uploading PDF...
+          </div>
+        )}
+        {uploadError && (
+          <div className="mt-2 flex items-center justify-center text-xs text-red-600">
+            {uploadError}
           </div>
         )}
       </Header>
