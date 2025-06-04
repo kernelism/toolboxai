@@ -100,20 +100,41 @@ poetry run uvicorn server:app --host 0.0.0.0 --port 8000
 2. Add your configuration:
 
     ```env
-    # Choose your model backend: together_ai, openai, or local
-    MODEL_BACKEND=together_ai
+    OPENAI_API_KEY=<your-api-key>
+    ANTHROPIC_API_KEY=<your-api-key>
+    MODEL_BACKEND=openai # default
+    DOCUMENTS_DIR="./data/documents" # documents storage folder
+    ```
 
-    # For Together.ai
-    API_KEY=your_api_key_here
-    MODEL=model_name  # e.g., togethercomputer/llama-2-70b-chat
-    API_URL=https://api.together.xyz/v1/completions
+3. Add your preferred model list in backend/models.toml
 
-    # For local models via Ollama
-    LOCAL_MODEL_NAME=model_name  # e.g., llama2 or mistral
-    OLLAMA_API_URL=http://localhost:11434
+    ```toml
+    # Model configurations for different providers
+    # Each provider can have multiple models with different weights
+    # Weights determine the probability of selecting a model (higher weight = more likely to be selected)
 
-    # Path to your documents
-    DOCUMENTS_DIR=./documents
+    [models]
+    # Available models: gpt-4, gpt-3.5-turbo, gpt-4-turbo-preview
+    openai = [
+        { name = "gpt-4", weight = 1 },           # Most capable but expensive
+        { name = "gpt-3.5-turbo", weight = 2 }    # Good balance of cost and capability
+    ]
+
+    # Available models: claude-3-opus, claude-3-sonnet, claude-3-haiku
+
+    # Available models depend on what you've pulled into Ollama
+    # Common models: llama2, mistral, codellama, neural-chat
+
+
+    # Routing configuration
+    [routing]
+    # Default provider to use when making requests
+    # Must be one of: openai, anthropic, ollama
+    default_provider = "openai"
+
+    # Fallback provider if the default provider fails
+    # Must be one of: openai, anthropic, ollama
+    fallback_provider = "anthropic" 
     ```
 
 ### Frontend
