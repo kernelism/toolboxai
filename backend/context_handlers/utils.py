@@ -13,5 +13,10 @@ def research_q_prompt_builder(request: models.AskRequest):
     {request.prompt}
 
     Please provide a detailed answer based on the context above. If the context doesn't contain enough information to answer the question, please state that clearly.
-    When referencing specific parts of the document, please mention the relevant page numbers.
+
+    Please do not include any additional information or personal opinions, just the answer based on the provided context. 
+    Refrain from mentioning any shortcomings in the context provided. Just answer to the point and to your knowledge.
+
+    Do not start the response with "Based on the context provided" or similar phrases.
+    Please ensure your response is concise and directly addresses the question asked.
     """
