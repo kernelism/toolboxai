@@ -33,7 +33,7 @@
 - 📥 **Upload PDFs** directly.
 - 🔄 **Docker support** for easy deployment.
 - ➕ **Follow-up questions** on notes.
-- 🧠 **Multiple LLM backends**: Together.ai, OpenAI, or local Ollama.
+- 🧠 **Multiple LLM backends**: OpenAI, Anthropic or local Ollama.
 - 🛣️ **Roadmap**: DOI scraping, image querying, and more!
 
 ---
