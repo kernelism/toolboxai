@@ -102,8 +102,9 @@ poetry run uvicorn server:app --host 0.0.0.0 --port 8000
     ```env
     OPENAI_API_KEY=<your-api-key>
     ANTHROPIC_API_KEY=<your-api-key>
-    MODEL_BACKEND=openai # default
     DOCUMENTS_DIR="./data/documents" # documents storage folder
+    MODEL_CONFIG_PATH="models.toml"
+    OLLAMA_API_URL=http://localhost:11434
     ```
 
 3. Add your preferred model list in backend/models.toml
