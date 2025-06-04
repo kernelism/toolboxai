@@ -1,124 +1,163 @@
 <div align="center">
-  <h1>toolboxAi</h1>
-  <!-- You can add your logo here with: -->
-  <img src="./assets/toolboxai.png" alt="Toolbox.ai Logo" width="200"/>
+  <img src="./assets/toolboxai.png" alt="ToolboxAi Logo" width="160"/>
+  <h1>ToolboxAi</h1>
+  <p>
+    <b>Your AI-powered research assistant for reading and understanding papers.</b>
+  </p>
+  <p>
+    <a href="https://github.com/MinatoNamikaze02/toolboxai">
+      <img src="https://img.shields.io/github/stars/MinatoNamikaze02/toolboxai?style=social" alt="GitHub stars"/>
+    </a>
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"/>
+    <img src="https://img.shields.io/docker/pulls/library/python?label=Dockerized" alt="Docker"/>
+  </p>
 </div>
 
-### Overview
+---
 
-toolboxAi is an AI reading assistant for research papers. It allows you to select text from uploaded PDF files, ask specific questions about the content, and save answers as notes for later reference. The platform supports various LLMs through Together.ai, OpenAI or locally hosted ollama models. Work in progress.
+## 🚀 Overview
 
-### How it looks
+**ToolboxAi** is an AI reading assistant designed for researchers and students. Select text from uploaded PDF files, ask questions about the content, and save answers as notes for later reference. ToolboxAi supports routing across different llms from openai, anthropic and ollama.
 
-![screenshot1](./assets/ss1.png)
+---
 
-![screenshot1](./assets/ss2.png)
+## ✨ Features
 
-![screenshot1](./assets/ss3.png)
+- 🔍 **Select text and ask questions** from any part of your PDF.
+- 🤖 **Ask general questions** about the entire document.
+- 📝 **Save notes** for each PDF (stored in [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)).
+- 📄 **Select text across multiple pages**.
+- 🗒️ **Focus mode**: View notes with context, question, and answer highlighted.
+- 🗑️ **Delete notes** and clear conversations anytime.
+- 🔎 **PDF viewer** with zoom and navigation.
+- 📥 **Upload PDFs** directly.
+- 🔄 **Docker support** for easy deployment.
+- ➕ **Follow-up questions** on notes.
+- 🧠 **Multiple LLM backends**: Together.ai, OpenAI, or local Ollama.
+- 🛣️ **Roadmap**: DOI scraping, image querying, and more!
 
-![screenshot1](./assets/ss4.png)
+---
 
-### Setup
+## 🖼️ How it looks
 
-```
+<p align="center">
+  <img src="./assets/ss1.png" width="350"/>
+  <img src="./assets/ss2.png" width="350"/>
+  <br/>
+  <img src="./assets/ss3.png" width="350"/>
+  <img src="./assets/ss4.png" width="350"/>
+</p>
+
+---
+
+## ⚡ Quick Start
+
+### Using Docker (Recommended)
+
+```bash
 git clone https://github.com/MinatoNamikaze02/toolboxai.git
-```
-
-#### Using Docker (Recommended)
-The application is containerized using Docker and Docker Compose. Make sure you have Docker and Docker Compose installed on your system.
-
-```bash
-# Build and start the containers
-docker-compose up --build
-
-# The application will be available at:
-# Frontend: http://localhost:3000
-# Backend: http://localhost:8000
-```
-
-#### Manual Setup
-
-##### Frontend 
-```
 cd toolboxai
-
-npm install && npm start
+docker-compose up --build
 ```
 
-##### Backend
-The backend uses Poetry for dependency management. Make sure you have Poetry installed:
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:8000](http://localhost:8000)
+
+---
+
+### Manual Setup
+
+#### Frontend
 
 ```bash
-# Install Poetry (if not already installed)
-curl -sSL https://install.python-poetry.org | python3 -
+cd toolboxai/frontend
+npm install
+npm start
+```
 
-# Install dependencies and run the server
+#### Backend
+
+Make sure you have [Poetry](https://python-poetry.org/) installed:
+
+```bash
+cd toolboxai/backend
 poetry install
 poetry run uvicorn server:app --host 0.0.0.0 --port 8000
 ```
 
-### Model Configuration
-toolboxAi supports [together.ai](https://api.together.ai/models), [openai](https://platform.openai.com/docs/models) hosted models and local models through [ollama](https://ollama.com/library). Configure your preferred model by setting the following environment variables:
+---
 
-#### Backend Configuration
-Create a `.env` file in the backend directory:
-```bash
-# Create a .env file in the backend directory
-touch backend/.env
-```
+## ⚙️ Configuration
 
-Add the following variables to `backend/.env`:
-```bash
-# Required: Choose your model backend
-MODEL_BACKEND=together_ai  # Options: "togetherai", "openai" or "local"
+### Backend
 
-# For Together.ai
-API_KEY=your_api_key_here
-MODEL=model_name  # e.g., "togethercomputer/llama-2-70b-chat"
-API_URL=https://api.together.xyz/v1/completions # or other urls
+1. Create a `.env` file in the `backend` directory:
 
-# For local models via Ollama
-LOCAL_MODEL_NAME=model_name  # e.g., "llama2" or "mistral"
-OLLAMA_API_URL=http://localhost:11434  # Default Ollama API URL
+    ```bash
+    touch backend/.env
+    ```
 
-# documents path where your papers are stored
-DOCUMENTS_DIR='./documents'
-```
+2. Add your configuration:
 
-#### Frontend Configuration
-Create a `.env` file in the frontend directory:
-```bash
-# Create a .env file in the frontend directory
-touch frontend/.env
-```
+    ```env
+    # Choose your model backend: together_ai, openai, or local
+    MODEL_BACKEND=together_ai
 
-Add the following variable to `frontend/.env`:
-```bash
-# API endpoint for the backend server
-REACT_APP_API_PATH=http://localhost:8000
-```
+    # For Together.ai
+    API_KEY=your_api_key_here
+    MODEL=model_name  # e.g., togethercomputer/llama-2-70b-chat
+    API_URL=https://api.together.xyz/v1/completions
 
-### Feature log
-- [x] Select text and ask questions.
-- [x] Ask general questions on the entire pdf.
-- [x] Save notes for each pdf in [localstorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-- [x] Select text across different pages of a pdf.
-- [x] View notes on focus mode with context, question and answer highlighted.
-- [x] Delete notes and clear conversation any time.
-- [x] Pdf viewer and zoom.
-- [x] Docker support
-- [x] Support follow up questions on notes.
-- [x] Support uploading pdfs.
-- [ ] Support scraping pdfs with doi?
-- [ ] Support querying on images
+    # For local models via Ollama
+    LOCAL_MODEL_NAME=model_name  # e.g., llama2 or mistral
+    OLLAMA_API_URL=http://localhost:11434
 
-### Issue log
-- [x] Cannot select text from multiple pdf pages
+    # Path to your documents
+    DOCUMENTS_DIR=./documents
+    ```
+
+### Frontend
+
+1. Create a `.env` file in the `frontend` directory:
+
+    ```bash
+    touch frontend/.env
+    ```
+
+2. Add your backend API endpoint:
+
+    ```env
+    REACT_APP_API_PATH=http://localhost:8000
+    ```
+
+---
+
+## 🛣️ Roadmap
+
+- [ ] Support scraping PDFs with DOI
+- [ ] Querying on images
+- [x] Select text across multiple PDF pages
+- [x] Delete notes
+- [x] Ask questions on the entire PDF
+- [x] Follow-up questions on notes
+
+---
+
+## 🐞 Issue Log
+
+- [x] Cannot select text from multiple PDF pages
 - [x] Cannot delete notes
-- [x] Clicking outside before saving note deletes question and context, but retains answer and does not go away until saved
-- [x] Right side scroll z-index issues
-- [x] cannot ask question on entire pdf
-- [ ] "Ask a question" box explodes in size of answer is too long. temporary fix with max tokens
+- [x] UI scroll/z-index issues
+- [x] "Ask a question" box sizing with long answers (temporary fix: max tokens)
 
-### License
+---
+
+## 📄 License
+
 MIT
+
+---
+
+<p align="center">
+  <b>Made with ❤️ for researchers and students.</b>
+</p>
