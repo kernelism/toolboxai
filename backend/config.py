@@ -23,7 +23,7 @@ class ModelConfig(BaseSettings):
 
 class Settings(BaseSettings):
     # Core settings
-    DOCUMENTS_DIR: str = "./documents"
+    DOCUMENTS_DIR: str = "./data/documents"
     
     # API Keys
     OPENAI_API_KEY: str | None = None

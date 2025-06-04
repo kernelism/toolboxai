@@ -1,0 +1,7 @@
+tests/
+.git/
+README.md
+*.log
+data
+__pycache__
+documents
