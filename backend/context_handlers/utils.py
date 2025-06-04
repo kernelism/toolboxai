@@ -12,8 +12,6 @@ def research_q_prompt_builder(request: models.AskRequest):
     Here is the question you need to answer:
     {request.prompt}
 
-    Please provide a detailed answer based on the context above. If the context doesn't contain enough information to answer the question, please state that clearly.
-
     Please do not include any additional information or personal opinions, just the answer based on the provided context. 
     Refrain from mentioning any shortcomings in the context provided. Just answer to the point and to your knowledge.
 
