@@ -48,8 +48,6 @@
   <img src="./assets/ss4.png" width="350"/>
 </p>
 
----
-
 ## ⚡ Quick Start
 
 ### Using Docker (Recommended)
@@ -76,7 +74,6 @@ npm start
 ```
 
 #### Backend
-
 Make sure you have [Poetry](https://python-poetry.org/) installed:
 
 ```bash
@@ -151,8 +148,6 @@ poetry run uvicorn server:app --host 0.0.0.0 --port 8000
     ```env
     REACT_APP_API_PATH=http://localhost:8000
     ```
-
----
 
 ## 🛣️ Roadmap
 

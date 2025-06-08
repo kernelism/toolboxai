@@ -11,6 +11,7 @@ const AskEntirePdf = ({selectedPdf}) => {
   // Load conversation history from localStorage when component mounts or PDF changes
   useEffect(() => {
     if (selectedPdf) {
+      console.log("selectedPdf", selectedPdf);
       const savedConversation = localStorage.getItem(`conversation_${selectedPdf.id}`);
       if (savedConversation) {
         const { conversationId, messages } = JSON.parse(savedConversation);

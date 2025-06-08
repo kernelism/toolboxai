@@ -8,6 +8,8 @@ from db.models import PageTitles
 import logging
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
+import os
+import shutil
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -15,8 +17,22 @@ logger = logging.getLogger(__name__)
 
 class ChromaDBBase:
     def __init__(self):
-        self.client = chromadb.PersistentClient(path="chroma_db")
-        self.collection = self.client.get_or_create_collection(name="documents")
+        self.db_path = "data/chroma_db"
+        # Ensure the directory exists
+        os.makedirs(self.db_path, exist_ok=True)
+        
+        try:
+            self.client = chromadb.PersistentClient(path=self.db_path)
+            self.collection = self.client.get_or_create_collection(name="documents")
+        except Exception as e:
+            logger.error(f"Error initializing ChromaDB: {e}")
+            # If there's an error, try to reset the database
+            if os.path.exists(self.db_path):
+                shutil.rmtree(self.db_path)
+                os.makedirs(self.db_path)
+            self.client = chromadb.PersistentClient(path=self.db_path)
+            self.collection = self.client.get_or_create_collection(name="documents")
+        
         self.llm = LLMHandler()
         self.thread_pool = ThreadPoolExecutor(max_workers=4)
 
@@ -58,10 +74,14 @@ class ChromaDBBase:
     def add_document(self, pdf_path: str):
         """Add document to ChromaDB with optimized processing"""
         doc_id = pdf_path.split("/")[-1]
+        logger.info(f"Adding document to ChromaDB: {doc_id}")
+        
         pages = self.load_pdf_pages(pdf_path)
+        logger.info(f"Loaded {len(pages)} pages from PDF")
         
         # Process pages in batches
         batch_size = 10  # Adjust based on your needs
+        total_chunks = 0
         for i in range(0, len(pages), batch_size):
             batch = pages[i:i + batch_size]
             batch_data = self.process_page_batch(batch, doc_id, i)
@@ -78,7 +98,15 @@ class ChromaDBBase:
                 ids=ids
             )
             
+            total_chunks += len(documents)
             logger.info(f"Added batch {i//batch_size + 1} of {(len(pages) + batch_size - 1)//batch_size} for document {doc_id}")
+        
+        # Verify document was added
+        doc_results = self.collection.get(where={"doc_id": doc_id})
+        if doc_results.get("ids"):
+            logger.info(f"Successfully added document {doc_id} with {total_chunks} chunks")
+        else:
+            logger.error(f"Failed to add document {doc_id} to ChromaDB")
 
     def delete_document_by_doc_id(self, doc_id: str):
         results = self.collection.get(where={"doc_id": doc_id})
@@ -88,12 +116,23 @@ class ChromaDBBase:
 
     def query(self, query_text: str, doc_id: str = None, n_results: int = 5) -> List[PageTitles]:
         where_filter = {"doc_id": doc_id} if doc_id else {}
+        logger.info(f"Querying ChromaDB with filter: {where_filter}")
+
+        # First check if document exists in collection
+        doc_results = self.collection.get(where=where_filter)
+        if not doc_results.get("ids"):
+            logger.warning(f"No document found in ChromaDB with doc_id: {doc_id}")
+            return []
+
+        logger.info(f"Found {len(doc_results.get('ids', []))} chunks for document {doc_id}")
 
         results = self.collection.query(
             query_texts=[query_text],
             n_results=n_results,
             where=where_filter
         )
+
+        logger.info(f"Query returned {len(results.get('metadatas', [[]])[0])} results")
 
         page_titles_list = []
         for metadata in results.get('metadatas', [[]])[0]:

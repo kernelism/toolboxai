@@ -9,6 +9,7 @@ import logging
 from . import utils
 from .conversation_store import conversation_store
 from typing import List
+import httpx
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -76,7 +77,22 @@ class ModelRouter:
 class LLMHandler:
     def __init__(self):
         self.router = ModelRouter()
-        self.openai_client = OpenAI(api_key=settings.OPENAI_API_KEY) if settings.OPENAI_API_KEY else None
+        # Initialize OpenAI client with explicit proxy settings
+        if settings.OPENAI_API_KEY:
+            try:
+                self.openai_client = OpenAI(
+                    api_key=settings.OPENAI_API_KEY,
+                    http_client=httpx.Client(
+                        timeout=30.0,
+                        verify=True
+                    )
+                )
+            except Exception as e:
+                logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+                self.openai_client = None
+        else:
+            self.openai_client = None
+            
         self.anthropic_client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY) if settings.ANTHROPIC_API_KEY else None
         logger.info("Initialized LLMHandler")
     

@@ -27,6 +27,9 @@ app = FastAPI(title="Document Server API")
 # Create a thread pool for CPU-intensive tasks
 thread_pool = ThreadPoolExecutor(max_workers=4)
 
+# Ensure documents directory exists
+os.makedirs(settings.DOCUMENTS_DIR, exist_ok=True)
+
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     logger.info(exc.errors()) 
@@ -82,6 +85,7 @@ async def upload_pdf(
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
     try:
+        # Create a unique filename with timestamp
         file_id = str(uuid.uuid4())
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{timestamp}_{file.filename}"
@@ -91,25 +95,31 @@ async def upload_pdf(
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        logger.info("File is uploaded to dir")
+        logger.info(f"File uploaded to {file_path}")
         
-        # Get basic file info
-        doc = fitz.open(file_path)
-        page_count = len(doc)
-        file_size = os.path.getsize(file_path)
-        size_str = f"{file_size / 1024 / 1024:.2f} MB" if file_size > 1024 * 1024 else f"{file_size / 1024:.2f} KB"
-        
-        # Add PDF processing to background tasks
-        background_tasks.add_task(process_pdf, file_path, chroma_db)
-        
-        return models.FileResponse(
-            id=file_id,
-            title=file.filename,
-            path=file_path,
-            size=size_str,
-            pages=page_count,
-            lastModified=datetime.now().isoformat()
-        )
+        try:
+            # Get basic file info
+            doc = fitz.open(file_path)
+            page_count = len(doc)
+            file_size = os.path.getsize(file_path)
+            size_str = f"{file_size / 1024 / 1024:.2f} MB" if file_size > 1024 * 1024 else f"{file_size / 1024:.2f} KB"
+            
+            # Add PDF processing to background tasks
+            background_tasks.add_task(process_pdf, file_path, chroma_db)
+            
+            return models.FileResponse(
+                id=file_id,
+                title=file.filename,
+                path=file_path,
+                size=size_str,
+                pages=page_count,
+                lastModified=datetime.now().isoformat()
+            )
+        except Exception as e:
+            # If we can't read the PDF, delete it and raise an error
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            raise HTTPException(status_code=400, detail=f"Invalid PDF file: {str(e)}")
             
     except Exception as e:
         if os.path.exists(file_path):
@@ -196,12 +206,59 @@ async def ask_question(query_info: models.AskRequestNoContext,
     """
     Ask a question with the full document as context and handle conversation history
     """
-    results = db.query(query_text=query_info.prompt, doc_id=query_info.title)
+    # Find the actual document filename with timestamp
+    doc_files = list(Path(settings.DOCUMENTS_DIR).glob(f"*{query_info.title}"))
+    if not doc_files:
+        logger.warning(f"No document found matching title: {query_info.title}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"Document '{query_info.title}' not found. Please ensure the document exists and try again."
+        )
+    
+    # Use the full filename with timestamp
+    full_filename = doc_files[0].name
+    logger.info(f"Found document: {full_filename}")
+    
+    # Get most relevant pages from the document
+    results = db.query(query_text=query_info.prompt, doc_id=full_filename, n_results=10)
+    
+    if not results:
+        logger.warning(f"No results found for document: {full_filename}")
+        raise HTTPException(
+            status_code=404,
+            detail=f"No relevant content found in document '{query_info.title}'. Please try a different question or ensure the document has been processed."
+        )
+    
+    # Sort results by page number to maintain document order
+    sorted_results = sorted(results, key=lambda x: x.page_number)
+    
+    # Format context with minimal metadata
+    metadata_str = f"Title: {query_info.title}\n"
+    
+    # Format page content with character limit per page
+    MAX_CHARS_PER_PAGE = 1000  # Limit characters per page
+    page_content = "\n".join([
+        f"P{result.page_number}: {result.page_text[:MAX_CHARS_PER_PAGE]}"
+        for result in sorted_results
+    ])
+    
+    # Combine metadata and content
+    formatted_context = metadata_str + page_content
+    logger.info(f"Formatted context length: {len(formatted_context)} characters")
+    
+    if not formatted_context.strip():
+        logger.error("Formatted context is empty")
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to generate context from document. Please try again."
+        )
+    
     query = models.AskRequest(
         prompt=query_info.prompt,
-        context=" ".join([result.page_text for result in results]),
+        context=formatted_context,
         conversation_id=query_info.conversation_id
     )
+    
     return LLMHandler().send_llm_request(request=query)
 
 @app.delete("/conversations/{conversation_id}")
@@ -217,4 +274,4 @@ async def delete_conversation(conversation_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("server:app", host="0.0.0.0", port=9766, reload=True, factory=False)
+    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True, factory=False)
